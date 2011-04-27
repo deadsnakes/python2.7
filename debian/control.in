@@ -117,7 +117,7 @@ Description: Debug Build of the Python Interpreter (version @VER@)
 Package: @PVER@-tk
 Architecture: any
 Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-tk-deadsnakes
+Conflicts: python-tk-deadsnakes, python-tk
 Provides: ${python:Provides}
 Suggests: tix, @PVER@-tk-dbg
 XB-Python-Version: ${python:Versions}
@@ -128,7 +128,7 @@ Description: Tkinter - Writing Tk applications with Python (v@VER@)
 Package: @PVER@-gdbm
 Architecture: any
 Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-gdbm-deadsnakes
+Conflicts: python-gdbm-deadsnakes, python-gdbm
 Provides: ${python:Provides}
 Suggests: @PVER@-gdbm-dbg
 XB-Python-Version: ${python:Versions}
@@ -141,7 +141,7 @@ Architecture: any
 Priority: extra
 Section: debug
 Depends: @PVER@, ${python:Depends}, @PVER@-tk (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-tk-deadsnakes-dbg
+Conflicts: python-tk-deadsnakes-dbg, python-tk-dbg
 Description: Tkinter - Writing Tk applications with Python (v@VER@ debug extension)
  A module for writing portable GUI applications with Python (v@VER@) using Tk.
  Also known as Tkinter.
@@ -153,7 +153,7 @@ Architecture: any
 Priority: extra
 Section: debug
 Depends: @PVER@, ${python:Depends}, @PVER@-gdbm (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-gdbm-deadsnakes-dbg
+Conflicts: python-gdbm-deadsnakes-dbg, python-gdbm-dbg
 Description: GNU dbm database support for Python (v@VER@ debug extension)
  GNU dbm database module for Python (v@VER@). Install this if you want to
  create or read GNU dbm database files with Python.

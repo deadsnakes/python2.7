@@ -1,3 +1,15 @@
+python2.7 (2.7.1-8~ppa2~maverick1) maverick; urgency=low
+
+  * Imported from Lucid package.
+  * Conflict python-{tk,tk-dbg,gdbm,gdbm-dbg} in the python2.7- versions of
+    these packages.
+    - Those contain exactly the same files as these conflicting packages, so we
+      make sure they aren't installed at the same time. Note that it should
+      still be possible to use the python- variants, however those are based on
+      the 2.7.0 code.
+
+ -- Felix Krull <f_krull@gmx.de>  Wed, 27 Apr 2011 17:59:24 +0200
+
 python2.7 (2.7.1-8~ppa2~lucid1) lucid; urgency=low
 
   * Fix check for Posix semaphores.
