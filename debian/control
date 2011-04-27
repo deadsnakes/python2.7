@@ -1,0 +1,162 @@
+Source: python2.7
+Section: python
+Priority: optional
+XSBC-Original-Maintainer: Matthias Klose <doko@debian.org>
+Maintainer: Felix Krull <f_krull@gmx.de>
+Build-Depends: debhelper (>= 5), quilt, autoconf, libreadline-dev, libncursesw5-dev (>= 5.3), tk8.5-dev, zlib1g-dev, blt-dev (>= 2.4z), libssl-dev, libexpat1-dev, sharutils, libbz2-dev, libbluetooth-dev [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64], locales [!armel !avr32 !hppa !ia64 !mipsel], libsqlite3-dev, libffi-dev (>= 3.0.5), mime-support, libgpm2 [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64], netbase, lsb-release, bzip2, libdb4.8-dev, gdb, python, libgdbm-dev
+Build-Depends-Indep: python-sphinx
+Build-Conflicts: tcl8.3-dev, tk8.3-dev, tcl8.4-dev, tk8.4-dev, python2.7-xml, python-xml, autoconf2.13
+XS-Python-Version: 2.7
+Standards-Version: 3.9.1
+Vcs-Browser: https://code.launchpad.net/~doko/python/pkg2.7-debian
+Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg2.7-debian
+
+Package: python2.7
+Architecture: any
+Priority: optional
+Depends: python2.7-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
+Suggests: python2.7-doc, python2.7-profiler, binutils
+Provides: python2.7-cjkcodecs, python2.7-ctypes, python2.7-elementtree, python2.7-celementtree, python2.7-wsgiref
+XB-Python-Version: 2.7
+Description: An interactive high-level object-oriented language (version 2.7)
+ Version 2.7 of the high-level, interactive object oriented language,
+ includes an extensive class library with lots of goodies for
+ network programming, system administration, sounds and graphics.
+
+Package: python2.7-minimal
+Architecture: any
+Priority: optional
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: python2.7
+Suggests: binfmt-support
+Replaces: python2.7 (<< 2.7.1~rc1-2~)
+Conflicts: binfmt-support (<< 1.1.2)
+XB-Python-Runtime: python2.7
+XB-Python-Version: 2.7
+Description: A minimal subset of the Python language (version 2.7)
+ This package contains the interpreter and some essential modules.  It can
+ be used in the boot process for some basic tasks.
+ See /usr/share/doc/python2.7-minimal/README.Debian for a list of the modules
+ contained in this package.
+
+Package: libpython2.7
+Architecture: any
+Section: libs
+Priority: optional
+Depends: python2.7 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Replaces: python2.7 (<< 2.6)
+Description: Shared Python runtime library (version 2.7)
+ Version 2.7 of the high-level, interactive object oriented language,
+ includes an extensive class library with lots of goodies for
+ network programming, system administration, sounds and graphics.
+ .
+ This package contains the shared runtime library, normally not needed
+ for programs using the statically linked interpreter.
+
+Package: python2.7-examples
+Architecture: all
+Depends: python2.7 (>= ${source:Version}), ${misc:Depends}
+Description: Examples for the Python language (v2.7)
+ Examples, Demos and Tools for Python (v2.7). These are files included in
+ the upstream Python distribution (v2.7).
+
+Package: python2.7-dev
+Architecture: any
+Depends: python2.7 (= ${binary:Version}), libpython2.7 (= ${binary:Version}), libexpat1-dev, libssl-dev, ${shlibs:Depends}, ${misc:Depends}
+Recommends: libc6-dev | libc-dev
+Replaces: python2.7 (<< 2.7-3)
+Description: Header files and a static library for Python (v2.7)
+ Header files, a static library and development tools for building
+ Python (v2.7) modules, extending the Python interpreter or embedding
+ Python (v2.7) in applications.
+ .
+ Maintainers of Python packages should read README.maintainers.
+
+Package: idle-python2.7
+Architecture: all
+Depends: python2.7, python2.7-tk, ${misc:Depends}
+Enhances: python2.7
+Replaces: python2.7 (<< 2.6.1-2)
+XB-Python-Version: 2.7
+Description: An IDE for Python (v2.7) using Tkinter
+ IDLE is an Integrated Development Environment for Python (v2.7).
+ IDLE is written using Tkinter and therefore quite platform-independent.
+
+Package: python2.7-doc
+Section: doc
+Architecture: all
+Depends: libjs-jquery, ${misc:Depends}
+Suggests: python2.7
+Description: Documentation for the high-level object-oriented language Python (v2.7)
+ These is the official set of documentation for the interactive high-level
+ object-oriented language Python (v2.7). All documents are provided
+ in HTML format. The package consists of ten documents:
+ .
+   * What's New in Python2.7
+   * Tutorial
+   * Python Library Reference
+   * Macintosh Module Reference
+   * Python Language Reference
+   * Extending and Embedding Python
+   * Python/C API Reference
+   * Installing Python Modules
+   * Documenting Python
+   * Distributing Python Modules
+
+Package: python2.7-dbg
+Section: debug
+Architecture: any
+Priority: extra
+Depends: python2.7 (>= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Suggests: python2.7-gdbm-dbg, python2.7-tk-dbg
+Description: Debug Build of the Python Interpreter (version 2.7)
+ Python interpreter configured with --pydebug. Dynamically loaded modules are
+ searched in /usr/lib/python2.7/lib-dynload/debug first.
+
+
+Package: python2.7-tk
+Architecture: any
+Depends: python2.7, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python-tk-deadsnakes
+Provides: ${python:Provides}
+Suggests: tix, python2.7-tk-dbg
+XB-Python-Version: ${python:Versions}
+Description: Tkinter - Writing Tk applications with Python (v2.7)
+ A module for writing portable GUI applications with Python (v2.7) using Tk.
+ Also known as Tkinter.
+
+Package: python2.7-gdbm
+Architecture: any
+Depends: python2.7, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python-gdbm-deadsnakes
+Provides: ${python:Provides}
+Suggests: python2.7-gdbm-dbg
+XB-Python-Version: ${python:Versions}
+Description: GNU dbm database support for Python (v2.7)
+ GNU dbm database module for Python (v2.7). Install this if you want to
+ create or read GNU dbm database files with Python.
+
+Package: python2.7-tk-dbg
+Architecture: any
+Priority: extra
+Section: debug
+Depends: python2.7, ${python:Depends}, python2.7-tk (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python-tk-deadsnakes-dbg
+Description: Tkinter - Writing Tk applications with Python (v2.7 debug extension)
+ A module for writing portable GUI applications with Python (v2.7) using Tk.
+ Also known as Tkinter.
+ .
+ This package contains the extensions built for the python debug interpreter.
+
+Package: python2.7-gdbm-dbg
+Architecture: any
+Priority: extra
+Section: debug
+Depends: python2.7, ${python:Depends}, python2.7-gdbm (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python-gdbm-deadsnakes-dbg
+Description: GNU dbm database support for Python (v2.7 debug extension)
+ GNU dbm database module for Python (v2.7). Install this if you want to
+ create or read GNU dbm database files with Python.
+ .
+ This package contains the extensions built for the python debug interpreter.
+

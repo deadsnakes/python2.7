@@ -1,0 +1,23 @@
+diff --git a/setup.py b/setup.py
+--- a/setup.py
++++ b/setup.py
+@@ -6,6 +6,7 @@
+ import sys, os, imp, re, optparse
+ from glob import glob
+ from platform import machine as platform_machine
++import subprocess
+ import sysconfig
+ 
+ from distutils import log
+@@ -1920,7 +1921,10 @@
+             # in /usr/include/ffi
+             inc_dirs.append('/usr/include/ffi')
+ 
+-        ffi_inc = [sysconfig.get_config_var("LIBFFI_INCLUDEDIR")]
++        ffi_inc = ["/usr/include/%s" % subprocess.check_output(
++                        "dpkg-architecture -qDEB_BUILD_GNU_TYPE",
++                        shell=True).strip(),
++                   sysconfig.get_config_var("LIBFFI_INCLUDEDIR")]
+         if not ffi_inc or ffi_inc[0] == '':
+             ffi_inc = find_file('ffi.h', [], inc_dirs)
+         if ffi_inc is not None:

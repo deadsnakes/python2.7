@@ -1,0 +1,17 @@
+# DP: Fix profiled build; don't use Python/thread.gc*, gcc complains
+
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -383,10 +383,10 @@
+ 	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-generate" LIBS="$(LIBS) -lgcov"
+ 
+ run_profile_task:
+-	./$(BUILDPYTHON) $(PROFILE_TASK)
++	-./$(BUILDPYTHON) $(PROFILE_TASK)
+ 
+ build_all_use_profile:
+-	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-use"
++	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-use -fprofile-correction"
+ 
+ coverage:
+ 	@echo "Building with support for coverage checking:"

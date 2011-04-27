@@ -1,0 +1,14 @@
+# DP: Proposed fix for issue 9054.
+
+--- a/Modules/pyexpat.c
++++ b/Modules/pyexpat.c
+@@ -418,6 +418,9 @@
+     if (!have_handler(self, CharacterData))
+         return -1;
+ 
++    if (!have_handler(self, CharacterData))
++        return -1;
++
+     args = PyTuple_New(1);
+     if (args == NULL)
+         return -1;
