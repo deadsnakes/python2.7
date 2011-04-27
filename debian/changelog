@@ -1,3 +1,10 @@
+python2.7 (2.7.1-8~ppa2~lucid1) lucid; urgency=low
+
+  * Fix check for Posix semaphores.
+    - So multiprocessing includes support for it.
+
+ -- Felix Krull <f_krull@gmx.de>  Wed, 27 Apr 2011 17:29:01 +0200
+
 python2.7 (2.7.1-8~ppa1~lucid1) lucid; urgency=low
 
   * Imported from Debian Unstable.
