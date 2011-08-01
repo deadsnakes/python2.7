@@ -54,3 +54,4 @@ no-openssl-v2.diff
 link-whole-archive.diff
 deadsnakes-fix-libffi-header-search-path.diff
 deadsnakes-fix-posix-semaphore-check.diff
+deadsnakes-add-pstats-profilepy-hg42f40f53fd73.diff
