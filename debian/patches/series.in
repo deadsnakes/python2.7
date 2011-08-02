@@ -1,5 +1,3 @@
-unexpand-revisions.diff
-hg-updates.diff
 deb-setup.diff
 deb-locations.diff
 site-locations.diff
@@ -50,7 +48,7 @@ issue9012a.diff
 issue9054.diff
 link-system-expat.diff
 plat-gnukfreebsd.diff
-no-openssl-v2.diff
 link-whole-archive.diff
 deadsnakes-fix-libffi-header-search-path.diff
 deadsnakes-fix-posix-semaphore-check.diff
+deadsnakes-add-pstats-profilepy-hg42f40f53fd73.diff
