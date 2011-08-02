@@ -4,8 +4,9 @@ python2.7 (2.7.2-0~ppa1~lucid1) lucid; urgency=low
   * Added Lib/{profile,pstats}.py.
     - Those were removed from the Debian package due to a too restrictive
       license. These are from Python 2.7 tip, HG rev. 42f40f53fd73.
+    - Also provide python2.7-profiler, for completeness' sake.
 
- -- Felix Krull <f_krull@gmx.de>  Mon, 01 Aug 2011 18:40:36 +0200
+ -- Felix Krull <f_krull@gmx.de>  Tue, 02 Aug 2011 17:27:07 +0200
 
 python2.7 (2.7.1-8~ppa2~lucid1) lucid; urgency=low
 
