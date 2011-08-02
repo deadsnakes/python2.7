@@ -60,10 +60,10 @@ if [ "$1" = configure ]; then
 	    echo "Linking and byte-compiling packages for runtime @PVER@..."
 	fi
 	version=$(dpkg -s @PVER@-minimal | awk '/^Version:/ {print $2}')
-	for hook in /usr/share/python/runtime.d/*.rtinstall; do
-	    [ -x $hook ] || continue
-	    $hook rtinstall @PVER@ "$2" "$version"
-	done
+	#for hook in /usr/share/python/runtime.d/*.rtinstall; do
+	#    [ -x $hook ] || continue
+	#    $hook rtinstall @PVER@ "$2" "$version"
+	#done
 	if [ -f /var/lib/python/@PVER@_installed ]; then
 	    rm -f /var/lib/python/@PVER@_installed
 	    rmdir --ignore-fail-on-non-empty /var/lib/python 2>/dev/null

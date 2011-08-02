@@ -3,8 +3,16 @@ python2.7 (2.7.2-0~ppa1~maverick1) maverick; urgency=low
   * Don't actually conflict python-{tk,...} anymore, instead divert files
     out of the way.
     - Same for files from python-profiler.
+  * Remove installation hook support.
+    - There are packages that, in one of these executable hooks, run
+      /usr/bin/pycompile for the installed Python version. For 2.7 on
+      Maverick, this fails because of ... gremlins? Python 2.7 is not
+      recorded as a supported version in /usr/share/python/debian_defaults,
+      so pycompile fails, even though Python 2.7 is clearly packaged and
+      supported ... I don't think this makes any sense, but no one actually
+      reads these changelogs anyway, right?
 
- -- Felix Krull <f_krull@gmx.de>  Tue, 02 Aug 2011 17:30:39 +0200
+ -- Felix Krull <f_krull@gmx.de>  Tue, 02 Aug 2011 22:13:54 +0200
 
 python2.7 (2.7.2-0~ppa1~lucid1) lucid; urgency=low
 
