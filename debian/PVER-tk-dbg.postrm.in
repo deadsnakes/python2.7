@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+PACKAGE=@PVER@-tk-dbg
+FILES="
+/usr/lib/debug/usr/lib/@PVER@/lib-dynload/_tkinter.so
+/usr/lib/@PVER@/lib-dynload/_tkinter_d.so
+"
+
+if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+  for item in $FILES; do
+    dpkg-divert --package $PACKAGE --remove --rename $item
+  done
+fi
+
+#DEBHELPER#

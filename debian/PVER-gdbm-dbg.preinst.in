@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+PACKAGE=@PVER@-gdbm-dbg
+FILES="
+/usr/lib/debug/usr/lib/@PVER@/lib-dynload/gdbm.so
+/usr/lib/@PVER@/lib-dynload/gdbm_d.so
+"
+
+if [ "$1" = "upgrade" ] || [ "$1" = "install" ]; then
+  for item in $FILES; do
+    dpkg-divert --package $PACKAGE --add --rename $item
+  done
+fi
+
+#DEBHELPER#
