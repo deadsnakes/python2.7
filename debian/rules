@@ -1023,6 +1023,8 @@ stamps/stamp-configure: stamps configure.in
 	touch stamps/stamp-configure
 
 
+binary: binary-indep binary-arch
+
 .PHONY: control-file configure build clean binary-indep binary-arch binary install
 
 # Local Variables:
