@@ -531,7 +531,7 @@ endif
 clean: control-file
 	dh_testdir
 	dh_testroot
-	rm -rf stamps .pc
+	rm -rf stamps
 	rm -f debian/test_results
 
 	$(MAKE) -C Doc clean
@@ -1016,7 +1016,7 @@ patch: stamps stamps/stamp-configure
 stamps:
 	mkdir -p stamps
 
-stamps/stamp-configure: configure.in
+stamps/stamp-configure: stamps configure.in
 	rm -rf autom4te.cache configure
 	autoconf
 	autoheader
