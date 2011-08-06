@@ -229,7 +229,7 @@ class HelperFunctionsTests(unittest.TestCase):
         elif os.sep == '/':
             self.assertEqual(len(dirs), 2)
             wanted = os.path.join('xoxo', 'lib', 'python' + sys.version[:3],
-                                  'site-packages')
+                                  'dist-packages')
             self.assertEqual(dirs[0], wanted)
             wanted = os.path.join('xoxo', 'lib', 'site-python')
             self.assertEqual(dirs[1], wanted)

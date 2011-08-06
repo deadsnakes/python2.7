@@ -1967,10 +1967,14 @@ def apropos(key):
         if modname[-9:] == '.__init__':
             modname = modname[:-9] + ' (package)'
         print modname, desc and '- ' + desc
+    def onerror(modname):
+        # Ignore non-ImportError exceptions raised whilst trying to
+        # import modules
+        pass
     try: import warnings
     except ImportError: pass
     else: warnings.filterwarnings('ignore') # ignore problems during import
-    ModuleScanner().run(callback, key)
+    ModuleScanner().run(callback, key, onerror=onerror)
 
 # --------------------------------------------------- web browser interface
 
