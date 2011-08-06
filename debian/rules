@@ -219,7 +219,7 @@ ifeq ($(with_fpectl),yes)
 		--with-fpectl
 endif
 
-stamps/stamp-configure-shared: stamps/stamp-patch
+stamps/stamp-configure-shared: stamps/stamp-configure
 	rm -rf $(buildd_shared)
 	mkdir -p $(buildd_shared)
 	cd $(buildd_shared) && \
@@ -239,7 +239,7 @@ stamps/stamp-configure-shared: stamps/stamp-patch
 
 	touch stamps/stamp-configure-shared
 
-stamps/stamp-configure-static: stamps/stamp-patch
+stamps/stamp-configure-static: stamps/stamp-configure
 	rm -rf $(buildd_static)
 	mkdir -p $(buildd_static)
 	cd $(buildd_static) && \
@@ -263,7 +263,7 @@ stamps/stamp-configure-static: stamps/stamp-patch
 
 	touch stamps/stamp-configure-static
 
-stamps/stamp-configure-debug: stamps/stamp-patch
+stamps/stamp-configure-debug: stamps/stamp-configure
 	rm -rf $(buildd_debug)
 	mkdir -p $(buildd_debug)
 	cd $(buildd_debug) && \
@@ -288,7 +288,7 @@ stamps/stamp-configure-debug: stamps/stamp-patch
 
 	touch stamps/stamp-configure-debug
 
-stamps/stamp-configure-shared-debug: stamps/stamp-patch
+stamps/stamp-configure-shared-debug: stamps/stamp-configure
 	rm -rf $(buildd_shdebug)
 	mkdir -p $(buildd_shdebug)
 	cd $(buildd_shdebug) && \
@@ -503,7 +503,7 @@ stamps/stamp-doc-html:
 	$(MAKE) -C Doc html
 	touch stamps/stamp-doc-html
 
-build-doc: stamps/stamp-patch stamps/stamp-build-doc
+build-doc: stamps/stamp-configure stamps/stamp-build-doc
 stamps/stamp-build-doc: stamps/stamp-doc-html
 	touch stamps/stamp-build-doc
 
@@ -531,7 +531,6 @@ endif
 clean: control-file
 	dh_testdir
 	dh_testroot
-	$(MAKE) -f debian/rules unpatch
 	rm -rf stamps .pc
 	rm -f debian/test_results
 
@@ -1010,52 +1009,19 @@ endif
 	dh_md5sums -a
 	dh_builddeb -a
 
-# rules to patch the unpacked files in the source directory
-# ---------------------------------------------------------------------------
-# various rules to unpack addons and (un)apply patches.
-# 	- patch / apply-patches
-#	- unpatch / reverse-patches
 
-patchdir	= debian/patches
+# Simply rebuild configure once to contain any changes made to configure.in by patches.
+patch: stamps stamps/stamp-configure
 
-glibc_version := $(shell dpkg -s locales | awk '/^Version:/ {print $$2}')
-broken_utimes := $(shell dpkg --compare-versions $(glibc_version) lt 2.3.5 && echo yes || echo no)
+stamps:
+	mkdir -p stamps
 
-$(patchdir)/series: $(patchdir)/series.in
-	cpp -E \
-	  -D$(distribution) \
-	  $(if $(filter $(broken_utimes),yes),-DBROKEN_UTIMES) \
-	  -Darch_os_$(DEB_HOST_ARCH_OS) -Darch_$(DEB_HOST_ARCH) \
-	  -o - $(patchdir)/series.in \
-	  | egrep -v '^(#.*|$$)' > $(patchdir)/series
-
-patch: stamps/stamp-patch
-stamps/stamp-patch: $(patchdir)/series
-	dh_testdir
-	QUILT_PATCHES=$(patchdir) quilt push -a || test $$? = 2
+stamps/stamp-configure: configure.in
 	rm -rf autom4te.cache configure
 	autoconf
-	mkdir -p stamps
-	echo ""; echo "Patches applied in this version:" > stamps/pxx
-	for i in $$(cat $(patchdir)/series); do \
-	  echo ""; echo "$$i:"; \
-	  sed -n 's/^# *DP: */  /p' $(patchdir)/$$i; \
-	done >> stamps/pxx
-	mv stamps/pxx $@
+	autoheader
+	touch stamps/stamp-configure
 
-reverse-patches: unpatch
-unpatch:
-	QUILT_PATCHES=$(patchdir) quilt pop -a -R || test $$? = 2
-	rm -f stamps/stamp-patch $(patchdir)/series
-	rm -rf autom4te.cache
-
-update-patches: $(patchdir)/series
-	export QUILT_PATCHES=$(patchdir); \
-	export QUILT_REFRESH_ARGS="--no-timestamps --no-index -pab"; \
-	export QUILT_DIFF_ARGS="--no-timestamps --no-index -pab"; \
-	while quilt push; do quilt refresh; done
-
-binary: binary-indep binary-arch
 
 .PHONY: control-file configure build clean binary-indep binary-arch binary install
 
