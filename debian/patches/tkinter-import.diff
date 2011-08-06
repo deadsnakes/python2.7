@@ -10,7 +10,7 @@
 +try:
 +    import _tkinter
 +except ImportError, msg:
-+    raise ImportError, str(msg) + ', please install the python-tk package'
++    raise ImportError, str(msg) + ', please install the python%s.%s-tk package' % sys.version_info[:2]
  tkinter = _tkinter # b/w compat for export
  TclError = _tkinter.TclError
  from types import *
