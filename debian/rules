@@ -220,7 +220,7 @@ ifeq ($(with_fpectl),yes)
 endif
 
 stamps/stamp-configure-shared: stamps/stamp-configure
-	rm -rf $(buildd_shared)
+	rm -rf $(buildd_shared) stamps/stamp-build-shared
 	mkdir -p $(buildd_shared)
 	cd $(buildd_shared) && \
 	  CC="$(CC)" $(OPTSETTINGS) \
@@ -240,7 +240,8 @@ stamps/stamp-configure-shared: stamps/stamp-configure
 	touch stamps/stamp-configure-shared
 
 stamps/stamp-configure-static: stamps/stamp-configure
-	rm -rf $(buildd_static)
+	rm -rf $(buildd_static) stamps/stamp-build-static stamps/stamp-mincheck \
+	  stamps/stamp-check stamps/stamp-pystone stamps/stamp-pybench
 	mkdir -p $(buildd_static)
 	cd $(buildd_static) && \
 	  CC="$(CC)" $(OPTSETTINGS) \
@@ -264,7 +265,7 @@ stamps/stamp-configure-static: stamps/stamp-configure
 	touch stamps/stamp-configure-static
 
 stamps/stamp-configure-debug: stamps/stamp-configure
-	rm -rf $(buildd_debug)
+	rm -rf $(buildd_debug) stamps/stamp-build-debug
 	mkdir -p $(buildd_debug)
 	cd $(buildd_debug) && \
 	  CC="$(CC)" $(OPTDEBUGSETTINGS) CFLAGS="" CXXFLAGS="" \
@@ -289,7 +290,7 @@ stamps/stamp-configure-debug: stamps/stamp-configure
 	touch stamps/stamp-configure-debug
 
 stamps/stamp-configure-shared-debug: stamps/stamp-configure
-	rm -rf $(buildd_shdebug)
+	rm -rf $(buildd_shdebug) stamps/stamp-build-shared-debug
 	mkdir -p $(buildd_shdebug)
 	cd $(buildd_shdebug) && \
 	  CC="$(CC)" $(OPTDEBUGSETTINGS) CFLAGS="" CXXFLAGS="" \
@@ -590,7 +591,7 @@ endif
 	mv $(d)/usr/lib/python$(VER)/site-packages \
 		$(d)/usr/lib/python$(VER)/dist-packages
 
-	: # remove files, which are not packaged
+	: # remove files which are not packaged
 	rm -f $(d)/usr/bin/smtpd.py
 	rm -rf $(d)/usr/lib/python$(VER)/ctypes/macholib
 	rm -f $(d)/usr/lib/pkgconfig/python.pc
@@ -870,7 +871,7 @@ ifeq ($(with_gdbm),yes)
 endif
 	rm -f $(d_dbg)/$(scriptdir)/lib-dynload/gdbm_d.so
 	rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/gdbm.so
-	
+
 ifeq ($(with_tk),yes)
 	# move debug files to corresponding debug package
 	dh_installdirs -p$(p_tk_dbg) $(scriptdir)/lib-dynload
@@ -967,7 +968,7 @@ binary-arch: build install
 	  ln -s $(p_base) debian/$$i/usr/share/doc/$$i; \
 	done
 	-find debian ! -perm -200 -print -exec chmod +w {} \;
-	
+
 ifneq ($(with_tk),yes)
 	rm -f $(d_base)/$(scriptdir)/lib-dynload/_tkinter.so
 else
@@ -1009,13 +1010,10 @@ endif
 	dh_md5sums -a
 	dh_builddeb -a
 
-
-# Simply rebuild configure once to contain any changes made to configure.in by patches.
-patch: stamps stamps/stamp-configure
-
 stamps:
 	mkdir -p stamps
 
+# Simply rebuild configure once to contain any changes made to configure.in by patches.
 stamps/stamp-configure: stamps configure.in
 	rm -rf autom4te.cache configure
 	autoconf
