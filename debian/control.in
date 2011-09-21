@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5), quilt, autoconf, libreadline-dev, libncursesw5-
 Build-Depends-Indep: python-sphinx
 Build-Conflicts: tcl8.3-dev, tk8.3-dev, tcl8.4-dev, tk8.4-dev, @PVER@-xml, python-xml, autoconf2.13
 XS-Python-Version: @VER@
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Vcs-Browser: https://code.launchpad.net/~doko/python/pkg@VER@-debian
 Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg@VER@-debian
 
