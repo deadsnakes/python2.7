@@ -1012,6 +1012,8 @@ endif
 	dh_md5sums -a
 	dh_builddeb -a
 
+patch: stamps/stamp-configure
+
 stamps:
 	mkdir -p stamps
 
