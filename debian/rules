@@ -546,7 +546,7 @@ clean: control-file
 
 	for f in debian/*.in; do \
 	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
-	  if [ $$f2 != debian/control ] && [ $$f2 != debian/source.lintian-overrides ]; then \
+	  if [ $$f2 != debian/control ]; then \
 	    rm -f $$f2; \
 	  fi; \
 	done
