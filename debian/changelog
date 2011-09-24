@@ -1,3 +1,9 @@
+python2.7 (2.7.2-1+lucid1) lucid; urgency=low
+
+  * New version numbering scheme.
+
+ -- Felix Krull <f_krull@gmx.de>  Sat, 24 Sep 2011 16:10:55 +0200
+
 python2.7 (2.7.2-0~ppa1~lucid1) lucid; urgency=low
 
   * Imported new upstream version.
