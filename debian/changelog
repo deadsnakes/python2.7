@@ -1,3 +1,12 @@
+python2.7 (2.7.2-1+lucid1) lucid; urgency=low
+
+  * New version numbering scheme.
+  * Explcitly use /usr/include/ncursesw header path for _curses modules.
+  * Added python2.7-complete metapackage that just depends on all other
+    binary packages generated from this source.
+
+ -- Felix Krull <f_krull@gmx.de>  Sat, 28 Jan 2012 18:27:46 +0100
+
 python2.7 (2.7.2-0~ppa1~maverick1) maverick; urgency=low
 
   * Don't actually conflict python-{tk,...} anymore, instead divert files

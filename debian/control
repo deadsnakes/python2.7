@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5), quilt, autoconf, libreadline-dev, libncursesw5-
 Build-Depends-Indep: python-sphinx
 Build-Conflicts: tcl8.3-dev, tk8.3-dev, tcl8.4-dev, tk8.4-dev, python2.7-xml, python-xml, autoconf2.13
 XS-Python-Version: 2.7
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Vcs-Browser: https://code.launchpad.net/~doko/python/pkg2.7-debian
 Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg2.7-debian
 
@@ -163,4 +163,31 @@ Description: GNU dbm database support for Python (v2.7 debug extension)
  create or read GNU dbm database files with Python.
  .
  This package contains the extensions built for the python debug interpreter.
+
+
+Package: python2.7-complete
+Architecture: all
+Priority: optional
+Depends:
+ python2.7 (>= ${binary:Version}),
+ python2.7-minimal (>= ${binary:Version}),
+ libpython2.7 (>= ${binary:Version}),
+ python2.7-examples (>= ${binary:Version}),
+ python2.7-dev (>= ${binary:Version}),
+ idle-python2.7 (>= ${binary:Version}),
+ python2.7-doc (>= ${binary:Version}),
+ python2.7-dbg (>= ${binary:Version}),
+ python2.7-tk (>= ${binary:Version}),
+ python2.7-gdbm (>= ${binary:Version}),
+ python2.7-tk-dbg (>= ${binary:Version}),
+ python2.7-gdbm-dbg (>= ${binary:Version}),
+ ${shlibs:Depends}, ${misc:Depends}
+XB-Python-Version: 2.7
+Description: An interactive high-level object-oriented language (version 2.7)
+ Version 2.7 of the high-level, interactive object oriented language,
+ includes an extensive class library with lots of goodies for
+ network programming, system administration, sounds and graphics.
+ .
+ This package depends on all individual packages that were generated from the
+ python2.7 source package.
 

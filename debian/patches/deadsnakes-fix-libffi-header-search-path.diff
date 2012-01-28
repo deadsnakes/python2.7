@@ -1,4 +1,3 @@
-diff --git a/setup.py b/setup.py
 --- a/setup.py
 +++ b/setup.py
 @@ -6,6 +6,7 @@
@@ -9,7 +8,7 @@ diff --git a/setup.py b/setup.py
  import sysconfig
  
  from distutils import log
-@@ -1920,7 +1921,10 @@
+@@ -1946,7 +1947,10 @@
              # in /usr/include/ffi
              inc_dirs.append('/usr/include/ffi')
  

@@ -237,6 +237,8 @@ is pure Python or contains extensions ("non-pure"):
 +-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
 | Platform        | Standard installation location                      | Default value                                    | Notes |
 +=================+=====================================================+==================================================+=======+
+| Debian/Ubuntu   | :file:`{prefix}/lib/python{X.Y}/dist-packages`      | :file:`/usr/local/lib/python{X.Y}/dist-packages` | \(0)  |
++-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
 | Unix (pure)     | :file:`{prefix}/lib/python{X.Y}/site-packages`      | :file:`/usr/local/lib/python{X.Y}/site-packages` | \(1)  |
 +-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
 | Unix (non-pure) | :file:`{exec-prefix}/lib/python{X.Y}/site-packages` | :file:`/usr/local/lib/python{X.Y}/site-packages` | \(1)  |
@@ -245,6 +247,14 @@ is pure Python or contains extensions ("non-pure"):
 +-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
 
 Notes:
+
+(0)
+   Starting with Python-2.6 Debian/Ubuntu uses for the Python which comes within
+   the Linux distribution a non-default name for the installation directory. This
+   is to avoid overwriting of the python modules which come with the distribution,
+   which unfortunately is the upstream behaviour of the installation tools. The
+   non-default name in :file:`/usr/local` is used not to overwrite a local python
+   installation (defaulting to :file:`/usr/local`).
 
 (1)
    Most Linux distributions include Python as a standard part of the system, so
@@ -366,6 +376,15 @@ them to go in :file:`/usr/local/lib/python2.{X}` rather than
 :file:`/usr/lib/python2.{X}`.  This can be done with ::
 
    /usr/bin/python setup.py install --prefix=/usr/local
+
+Starting with Python-2.6 Debian/Ubuntu does use
+:file:`/usr/lib/python{X.Y}/dist-packages` and
+:file:`/usr/local/lib/python{X.Y}/dist-packages` for the installation
+of python modules included in the Linux distribution.  To overwrite
+the name of the site directory, explicitely use the :option:`--prefix`
+option, however make sure that the installation path is included in
+``sys.path``.  For packaging of python modules for Debian/Ubuntu, use
+the new ``setup.py install`` option :option:`--install-layout=deb`.
 
 Another possibility is a network filesystem where the name used to write to a
 remote directory is different from the name used to read it: for example, the
@@ -604,6 +623,17 @@ convention of keeping all software related to the web server under :file:`/www`.
 Add-on Python modules might then belong in :file:`/www/python`, and in order to
 import them, this directory must be added to ``sys.path``.  There are several
 different ways to add the directory.
+
+On Debian/Ubuntu, starting with Python-2.6 the convention for system
+installed packages is to put then in the
+:file:`/usr/lib/python{X.Y}/dist-packages/` directory, and for locally
+installed packages is to put them in the
+:file:`/usr/lib/python{X.Y}/dist-packages/` directory.  To share the
+locally installed packages for the system provided Python with the
+locally installed packages of a local python installation, make
+:file:`/usr/lib/python{X.Y}/dist-packages/` a symbolic link to the
+:file:`{...}/site-packages/` directory of your local python
+installation.
 
 The most convenient way is to add a path configuration file to a directory
 that's already on Python's path, usually to the :file:`.../site-packages/`

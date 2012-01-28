@@ -109,7 +109,7 @@
  
 +        # enable custom installation, known values: deb
 +        self.install_layout = None
-+        
++
          self.compile = None
          self.optimize = None
  
@@ -287,7 +287,7 @@
  
  
  def _init_posix(vars):
-@@ -371,7 +394,7 @@
+@@ -356,7 +379,7 @@
          else:
              inc_dir = _PROJECT_BASE
      else:
@@ -320,7 +320,7 @@
              self.assertEqual(dirs[1], wanted)
 --- a/Lib/test/test_sysconfig.py
 +++ b/Lib/test/test_sysconfig.py
-@@ -236,7 +236,7 @@
+@@ -235,7 +235,7 @@
  
      def test_get_scheme_names(self):
          wanted = ('nt', 'nt_user', 'os2', 'os2_home', 'osx_framework_user',

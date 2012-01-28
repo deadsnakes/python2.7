@@ -1,0 +1,37 @@
+# Add /usr/include/ncursesw for the _curses and _cursespanel modules. Prior to
+# precise, libreadline-dev would pull in libncurses5-dev which provides
+# /usr/include/curses.h; but that's kinda wrong and doesn't work in precise
+# anymore (at least on amd64), so we just use the correct include path right
+# away. See also:
+# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=650600
+
+--- a/setup.py
++++ b/setup.py
+@@ -1246,6 +1246,7 @@
+         # Curses support, requiring the System V version of curses, often
+         # provided by the ncurses library.
+         panel_library = 'panel'
++        ncursesw_incdirs = ["/usr/include/ncursesw"]
+         if curses_library.startswith('ncurses'):
+             if curses_library == 'ncursesw':
+                 # Bug 1464056: If _curses.so links with ncursesw,
+@@ -1253,7 +1254,8 @@
+                 panel_library = 'panelw'
+             curses_libs = [curses_library]
+             exts.append( Extension('_curses', ['_cursesmodule.c'],
+-                                   libraries = curses_libs) )
++                                   libraries = curses_libs,
++                                   include_dirs = ncursesw_incdirs) )
+         elif curses_library == 'curses' and platform != 'darwin':
+                 # OSX has an old Berkeley curses, not good enough for
+                 # the _curses module.
+@@ -1273,7 +1275,8 @@
+         if (module_enabled(exts, '_curses') and
+             self.compiler.find_library_file(lib_dirs, panel_library)):
+             exts.append( Extension('_curses_panel', ['_curses_panel.c'],
+-                                   libraries = [panel_library] + curses_libs) )
++                                   libraries = [panel_library] + curses_libs,
++                                   include_dirs = ncursesw_incdirs) )
+         else:
+             missing.append('_curses_panel')
+ 

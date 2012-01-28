@@ -1,6 +1,6 @@
 --- a/Lib/pydoc.py
 +++ b/Lib/pydoc.py
-@@ -1964,10 +1964,14 @@
+@@ -1967,10 +1967,14 @@
          if modname[-9:] == '.__init__':
              modname = modname[:-9] + ' (package)'
          print modname, desc and '- ' + desc

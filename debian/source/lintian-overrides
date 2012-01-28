@@ -1,0 +1,2 @@
+python2.7 source: unknown-field-in-dsc original-maintainer
+python2.7 source: build-depends-on-versioned-berkeley-db build-depends:libdb4.*-dev
