@@ -1,8 +1,9 @@
 python2.7 (2.7.2-1+lucid1) lucid; urgency=low
 
   * New version numbering scheme.
+  * Explcitly use /usr/include/ncursesw header path for _curses modules.
 
- -- Felix Krull <f_krull@gmx.de>  Sat, 24 Sep 2011 16:10:55 +0200
+ -- Felix Krull <f_krull@gmx.de>  Sat, 28 Jan 2012 18:14:47 +0100
 
 python2.7 (2.7.2-0~ppa1~lucid1) lucid; urgency=low
 

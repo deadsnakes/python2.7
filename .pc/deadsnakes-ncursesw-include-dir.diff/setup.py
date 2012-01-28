@@ -1246,7 +1246,6 @@ class PyBuildExt(build_ext):
         # Curses support, requiring the System V version of curses, often
         # provided by the ncurses library.
         panel_library = 'panel'
-        ncursesw_incdirs = ["/usr/include/ncursesw"]
         if curses_library.startswith('ncurses'):
             if curses_library == 'ncursesw':
                 # Bug 1464056: If _curses.so links with ncursesw,
@@ -1254,8 +1253,7 @@ class PyBuildExt(build_ext):
                 panel_library = 'panelw'
             curses_libs = [curses_library]
             exts.append( Extension('_curses', ['_cursesmodule.c'],
-                                   libraries = curses_libs,
-                                   include_dirs = ncursesw_incdirs) )
+                                   libraries = curses_libs) )
         elif curses_library == 'curses' and platform != 'darwin':
                 # OSX has an old Berkeley curses, not good enough for
                 # the _curses module.
@@ -1275,8 +1273,7 @@ class PyBuildExt(build_ext):
         if (module_enabled(exts, '_curses') and
             self.compiler.find_library_file(lib_dirs, panel_library)):
             exts.append( Extension('_curses_panel', ['_curses_panel.c'],
-                                   libraries = [panel_library] + curses_libs,
-                                   include_dirs = ncursesw_incdirs) )
+                                   libraries = [panel_library] + curses_libs) )
         else:
             missing.append('_curses_panel')
 
