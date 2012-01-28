@@ -169,18 +169,18 @@ Package: python2.7-complete
 Architecture: all
 Priority: optional
 Depends:
- python2.7 (= ${binary:Version}),
- python2.7-minimal (= ${binary:Version}),
- libpython2.7 (= ${binary:Version}),
- python2.7-examples (= ${binary:Version}),
- python2.7-dev (= ${binary:Version}),
- idle-python2.7 (= ${binary:Version}),
- python2.7-doc (= ${binary:Version}),
- python2.7-dbg (= ${binary:Version}),
- python2.7-tk (= ${binary:Version}),
- python2.7-gdbm (= ${binary:Version}),
- python2.7-tk-dbg (= ${binary:Version}),
- python2.7-gdbm-dbg (= ${binary:Version}),
+ python2.7 (>= ${binary:Version}),
+ python2.7-minimal (>= ${binary:Version}),
+ libpython2.7 (>= ${binary:Version}),
+ python2.7-examples (>= ${binary:Version}),
+ python2.7-dev (>= ${binary:Version}),
+ idle-python2.7 (>= ${binary:Version}),
+ python2.7-doc (>= ${binary:Version}),
+ python2.7-dbg (>= ${binary:Version}),
+ python2.7-tk (>= ${binary:Version}),
+ python2.7-gdbm (>= ${binary:Version}),
+ python2.7-tk-dbg (>= ${binary:Version}),
+ python2.7-gdbm-dbg (>= ${binary:Version}),
  ${shlibs:Depends}, ${misc:Depends}
 XB-Python-Version: 2.7
 Description: An interactive high-level object-oriented language (version 2.7)
