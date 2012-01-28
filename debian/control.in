@@ -164,3 +164,30 @@ Description: GNU dbm database support for Python (v@VER@ debug extension)
  .
  This package contains the extensions built for the python debug interpreter.
 
+
+Package: @PVER@-complete
+Architecture: all
+Priority: @PRIO@
+Depends:
+ @PVER@ (= ${binary:Version}),
+ @PVER@-minimal (= ${binary:Version}),
+ lib@PVER@ (= ${binary:Version}),
+ @PVER@-examples (= ${binary:Version}),
+ @PVER@-dev (= ${binary:Version}),
+ idle-@PVER@ (= ${binary:Version}),
+ @PVER@-doc (= ${binary:Version}),
+ @PVER@-dbg (= ${binary:Version}),
+ @PVER@-tk (= ${binary:Version}),
+ @PVER@-gdbm (= ${binary:Version}),
+ @PVER@-tk-dbg (= ${binary:Version}),
+ @PVER@-gdbm-dbg (= ${binary:Version}),
+ ${shlibs:Depends}, ${misc:Depends}
+XB-Python-Version: @VER@
+Description: An interactive high-level object-oriented language (version @VER@)
+ Version @VER@ of the high-level, interactive object oriented language,
+ includes an extensive class library with lots of goodies for
+ network programming, system administration, sounds and graphics.
+ .
+ This package depends on all individual packages that were generated from the
+ @PVER@ source package.
+
