@@ -1,3 +1,9 @@
+python2.7 (2.7.2-1+maverick1) maverick; urgency=low
+
+  * Import from Lucid package.
+
+ -- Felix Krull <f_krull@gmx.de>  Sat, 28 Jan 2012 20:03:37 +0100
+
 python2.7 (2.7.2-1+lucid1) lucid; urgency=low
 
   * New version numbering scheme.
