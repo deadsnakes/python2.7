@@ -1,6 +1,6 @@
 --- a/configure.in
 +++ b/configure.in
-@@ -3609,28 +3609,28 @@
+@@ -3623,28 +3623,28 @@
  # isn't loaded by default, so an attempt to call
  # sem_open results in a 'Signal 12' error.
  AC_MSG_CHECKING(whether POSIX semaphores are enabled)
@@ -50,7 +50,7 @@
  )
  AC_MSG_RESULT($ac_cv_posix_semaphores_enabled)
  if test $ac_cv_posix_semaphores_enabled = no
-@@ -3641,32 +3641,32 @@
+@@ -3655,32 +3655,32 @@
  
  # Multiprocessing check for broken sem_getvalue
  AC_MSG_CHECKING(for broken sem_getvalue)

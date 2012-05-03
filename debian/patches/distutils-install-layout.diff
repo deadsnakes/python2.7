@@ -4,7 +4,7 @@
 
 --- a/Doc/install/index.rst
 +++ b/Doc/install/index.rst
-@@ -237,6 +237,8 @@
+@@ -240,6 +240,8 @@
  +-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
  | Platform        | Standard installation location                      | Default value                                    | Notes |
  +=================+=====================================================+==================================================+=======+
@@ -13,7 +13,7 @@
  | Unix (pure)     | :file:`{prefix}/lib/python{X.Y}/site-packages`      | :file:`/usr/local/lib/python{X.Y}/site-packages` | \(1)  |
  +-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
  | Unix (non-pure) | :file:`{exec-prefix}/lib/python{X.Y}/site-packages` | :file:`/usr/local/lib/python{X.Y}/site-packages` | \(1)  |
-@@ -246,6 +248,14 @@
+@@ -249,6 +251,14 @@
  
  Notes:
  
@@ -28,7 +28,7 @@
  (1)
     Most Linux distributions include Python as a standard part of the system, so
     :file:`{prefix}` and :file:`{exec-prefix}` are usually both :file:`/usr` on
-@@ -367,6 +377,15 @@
+@@ -433,6 +443,15 @@
  
     /usr/bin/python setup.py install --prefix=/usr/local
  
@@ -44,7 +44,7 @@
  Another possibility is a network filesystem where the name used to write to a
  remote directory is different from the name used to read it: for example, the
  Python interpreter accessed as :file:`/usr/local/bin/python` might search for
-@@ -605,6 +624,17 @@
+@@ -684,6 +703,17 @@
  import them, this directory must be added to ``sys.path``.  There are several
  different ways to add the directory.
  
@@ -278,7 +278,7 @@
      return os.name
  
  def _getuserbase():
-@@ -271,7 +294,7 @@
+@@ -272,7 +295,7 @@
  def _get_makefile_filename():
      if _PYTHON_BUILD:
          return os.path.join(_PROJECT_BASE, "Makefile")
@@ -287,7 +287,7 @@
  
  
  def _init_posix(vars):
-@@ -356,7 +379,7 @@
+@@ -357,7 +380,7 @@
          else:
              inc_dir = _PROJECT_BASE
      else:
@@ -298,7 +298,7 @@
  def get_scheme_names():
 --- a/Lib/test/test_import.py
 +++ b/Lib/test/test_import.py
-@@ -245,7 +245,7 @@
+@@ -246,7 +246,7 @@
          with check_warnings(('', ImportWarning)):
              # Just a random non-package directory we always expect to be
              # somewhere in sys.path...
@@ -309,8 +309,8 @@
          path = os.path.abspath(TESTFN)
 --- a/Lib/test/test_site.py
 +++ b/Lib/test/test_site.py
-@@ -229,7 +229,7 @@
-         elif os.sep == '/':
+@@ -243,7 +243,7 @@
+             # OS X non-framwework builds, Linux, FreeBSD, etc
              self.assertEqual(len(dirs), 2)
              wanted = os.path.join('xoxo', 'lib', 'python' + sys.version[:3],
 -                                  'site-packages')
@@ -320,7 +320,7 @@
              self.assertEqual(dirs[1], wanted)
 --- a/Lib/test/test_sysconfig.py
 +++ b/Lib/test/test_sysconfig.py
-@@ -235,7 +235,7 @@
+@@ -231,7 +231,7 @@
  
      def test_get_scheme_names(self):
          wanted = ('nt', 'nt_user', 'os2', 'os2_home', 'osx_framework_user',
