@@ -4,7 +4,7 @@ Priority: optional
 XSBC-Original-Maintainer: Matthias Klose <doko@debian.org>
 Maintainer: Felix Krull <f_krull@gmx.de>
 Build-Depends: debhelper (>= 5), quilt, autoconf, libreadline-dev, libncursesw5-dev (>= 5.3), tk8.5-dev, zlib1g-dev, blt-dev (>= 2.4z), libssl-dev, libexpat1-dev, sharutils, libbz2-dev, libbluetooth-dev [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64], locales [!armel !avr32 !hppa !ia64 !mipsel], libsqlite3-dev, libffi-dev (>= 3.0.5), mime-support, libgpm2 [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64], netbase, lsb-release, bzip2, libdb4.8-dev, gdb, python, libgdbm-dev
-Build-Depends-Indep: python-sphinx
+Build-Depends-Indep: python-sphinx (>= 1.0.7)
 Build-Conflicts: tcl8.3-dev, tk8.3-dev, tcl8.4-dev, tk8.4-dev, python2.7-xml, python-xml, autoconf2.13
 XS-Python-Version: 2.7
 Standards-Version: 3.9.2
