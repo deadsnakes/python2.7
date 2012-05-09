@@ -626,6 +626,9 @@ endif
 	mv $(d)/$(scriptdir)/lib-dynload/Python-$(VER)*.egg-info \
 		$(d)/$(scriptdir)/lib-dynload/Python-$(VER).egg-info
 
+	: # Remove python2 binary.
+	rm -f $(d)/usr/bin/python2 $(d)/usr/bin/python2-config
+
 	dh_installdirs -p$(p_lib) \
 		$(scriptdir)/config \
 		usr/share/doc
