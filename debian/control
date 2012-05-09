@@ -15,7 +15,7 @@ Package: python2.7
 Architecture: any
 Priority: optional
 Depends: python2.7-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
-Suggests: python2.7-doc, python2.7-profiler, binutils
+Suggests: python2.7-doc, binutils
 Provides: python2.7-cjkcodecs, python2.7-ctypes, python2.7-elementtree, python2.7-celementtree, python2.7-wsgiref, python2.7-profiler
 XB-Python-Version: 2.7
 Description: An interactive high-level object-oriented language (version 2.7)
