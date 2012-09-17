@@ -47,6 +47,9 @@ export NVER=2.8
 export PVER=python2.7
 export PRIORITY=$(shell echo $(VER) | tr -d '.')0
 
+# For setup.py to feast upon.
+#export DEB_HOST_MULTIARCH=$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
 PREVVER	:= $(shell awk '/^python/ && NR > 1 {print substr($$2,2,length($$2)-2); exit}' debian/changelog)
 
 # default versions are built from the python-defaults source package
@@ -145,11 +148,12 @@ d_doc	:= debian/$(p_doc)
 d_dbg	:= debian/$(p_dbg)
 
 # profiled build fails on some architectures ...
-ifneq (,$(filter $(DEB_HOST_ARCH), hppa ia64 m68k sparc hurd-i386))
-  make_build_target =
-else
-  make_build_target = profile-opt
-endif
+#ifneq (,$(filter $(DEB_HOST_ARCH), hppa ia64 m68k sparc hurd-i386))
+#  make_build_target =
+#else
+#  make_build_target = profile-opt
+#endif
+make_build_target =
 
 build: $(build_target)
 build-all: build-arch build-indep
@@ -229,6 +233,7 @@ stamps/stamp-configure-shared: stamps/stamp-configure
 	    ../configure \
 		--enable-shared \
 		$(common_configure_args)
+	# Bake minimal extension modules into the interpreter.
 	egrep \
 	  "^#($$(awk '$$2 ~ /^extension$$/ {print $$1}' debian/PVER-minimal.README.Debian.in | tr '\012' '|')XX)" \
 	    Modules/Setup.dist \
@@ -249,6 +254,7 @@ stamps/stamp-configure-static: stamps/stamp-configure
 	  CC="$(CC)" $(OPTSETTINGS) \
 	    ../configure \
 		$(common_configure_args)
+	# Bake minimal extension modules into the interpreter.
 	egrep \
 	  "^#($$(awk '$$2 ~ /^extension$$/ {print $$1}' debian/PVER-minimal.README.Debian.in | tr '\012' '|')XX)" \
 	  Modules/Setup.dist | sed 's/^#//' \
@@ -274,6 +280,7 @@ stamps/stamp-configure-debug: stamps/stamp-configure
 	    ../configure \
 		$(common_configure_args) \
 		--with-pydebug
+	# Bake minimal extension modules into the interpreter.
 	egrep \
 	  "^#($$(awk '$$2 ~ /^extension$$/ {print $$1}' debian/PVER-minimal.README.Debian.in | tr '\012' '|')XX)" \
 	  Modules/Setup.dist | sed 's/^#//' \
@@ -300,6 +307,7 @@ stamps/stamp-configure-shared-debug: stamps/stamp-configure
 		$(common_configure_args) \
 		--enable-shared \
 		--with-pydebug
+	# Bake minimal extension modules into the interpreter.
 	egrep \
 	  "^#($$(awk '$$2 ~ /^extension$$/ {print $$1}' debian/PVER-minimal.README.Debian.in | tr '\012' '|')XX)" \
 	  Modules/Setup.dist \
@@ -342,8 +350,6 @@ TESTOPTS = -w -l -u$(TEST_RESOURCES)
 TEST_EXCLUDES =
 # not built from this source
 TEST_EXCLUDES += test_bsddb3
-# profile.py and pstats.py removed from sources
-TEST_EXCLUDES += test_pstats test_profile test_cprofile
 ifeq ($(on_buildd),yes)
   TEST_EXCLUDES += test_tcl test_codecmaps_cn test_codecmaps_hk \
         test_codecmaps_jp test_codecmaps_kr test_codecmaps_tw \
@@ -482,6 +488,7 @@ minimal-test:
 		mintest/lib/
 	cp -a $(foreach i,$(MIN_PACKAGES),Lib/$(i)) \
 		mintest/lib/
+	: # Don't install minimal extensions since those have been built statically.
 #	cp -p $(foreach i,$(MIN_EXTS),$(buildd_static)/build/lib*/$(i).so) \
 #		mintest/dynlib/
 	cp -p Lib/unittest.py mintest/lib/
@@ -627,7 +634,7 @@ endif
 		$(d)/$(scriptdir)/lib-dynload/Python-$(VER).egg-info
 
 	: # Remove python2 binary.
-	rm -f $(d)/usr/bin/python2 $(d)/usr/bin/python2-config
+	rm -f $(d)/usr/bin/python2 $(d)/usr/bin/python2-config $(d)/usr/lib/pkgconfig/python2.pc
 
 	dh_installdirs -p$(p_lib) \
 		$(scriptdir)/config \
@@ -684,6 +691,7 @@ endif
 #	mv $(d)/usr/share/include/python$(VER)/* $(d)/usr/include/python$(VER)/.
 #	rm -rf $(d)/usr/share/include
 	dh_installdirs -p$(p_dev) \
+		usr/bin \
 		usr/share/doc/python$(VER) \
 		$(scriptdir) \
 		$(scriptdir)/doc/html \
@@ -698,10 +706,15 @@ endif
 		usr/lib/python$(VER)/config \
 		usr/include/python$(VER) \
 		usr/lib/libpython$(VER).so \
-		usr/lib/libpython$(VER).a \
 		usr/lib/pkgconfig/python-$(VER).pc \
-		usr/bin/python$(VER)-config \
 		usr/lib/python$(VER)/distutils/command/wininst-*.exe
+	mv $(d)/usr/lib/libpython$(VER).a $(d_dev)/usr/lib/$(PVER)/config/
+
+	dh_link -p$(p_dev) usr/lib/python$(VER)/config/libpython$(VER).a \
+		usr/lib/libpython$(VER).a
+
+	: # install $(PVER)-config into $(p_dev)
+	dh_movefiles -p$(p_dev) --sourcedir=$(d) usr/bin/$(PVER)-config
 
 	cp -p $(buildd_shared)/libpython$(VER)-pic.a \
 		$(d_dev)/usr/lib/python$(VER)/config/
@@ -854,6 +867,7 @@ endif
 	cp -p debian/$(PVER)-dbg.README.Debian \
 		$(d_dbg)/usr/share/doc/$(p_base)/README.debug
 	cp -p $(buildd_debug)/python $(d_dbg)/usr/bin/$(PVER)-dbg
+	: # create $(PVER)-dbg-config from regular $(PVER)-config
 	sed '1s,#!.*python[^ ]*\(.*\),#! $(PY_INTERPRETER)-dbg\1,' \
 		$(d)-dbg/usr/bin/$(PVER)-config \
 		> $(d_dbg)/usr/bin/$(PVER)-dbg-config
@@ -885,8 +899,8 @@ ifeq ($(with_tk),yes)
 endif
 	rm -f $(d_dbg)/$(scriptdir)/lib-dynload/_tkinter_d.so
 	rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/_tkinter.so
-	
-#	rm -f $(d_dbg)/$(scriptdir)/lib-dynload/_bsddb_d.so
+
+
 
 	cp -a $(d)-dbg/$(scriptdir)/config_d $(d_dbg)/$(scriptdir)/
 	ln -sf ../../libpython$(VER)_d.so \
