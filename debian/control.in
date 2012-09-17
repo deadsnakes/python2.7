@@ -1,22 +1,31 @@
 Source: @PVER@
 Section: python
 Priority: optional
-XSBC-Original-Maintainer: Matthias Klose <doko@debian.org>
 Maintainer: Felix Krull <f_krull@gmx.de>
-Build-Depends: debhelper (>= 5), quilt, autoconf, libreadline-dev, libncursesw5-dev (>= 5.3), tk8.5-dev, zlib1g-dev, blt-dev (>= 2.4z), libssl-dev, libexpat1-dev, sharutils, libbz2-dev, libbluetooth-dev [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64], locales [!armel !avr32 !hppa !ia64 !mipsel], libsqlite3-dev, libffi-dev (>= 3.0.5), mime-support, libgpm2 [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64], netbase, lsb-release, bzip2, libdb4.8-dev, gdb, python, libgdbm-dev
+XSBC-Original-Maintainer: Matthias Klose <doko@debian.org>
+Build-Depends: debhelper (>= 5), autoconf,
+   mime-support, netbase, lsb-release, bzip2,
+   zlib1g-dev, libbz2-dev, libdb-dev, libssl-dev, libreadline-dev, libexpat1-dev,
+   libncursesw5-dev (>= 5.3), tk8.5-dev, blt-dev (>= 2.4z), libgpm2 [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64],
+   libbluetooth-dev [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64], locales [!armel !avr32 !hppa !ia64 !mipsel],
+   libsqlite3-dev, libffi-dev (>= 3.0.5-2), libgdbm-dev,
+   gdb, python
 Build-Depends-Indep: python-sphinx (>= 1.0.7)
-Build-Conflicts: tcl8.3-dev, tk8.3-dev, tcl8.4-dev, tk8.4-dev, @PVER@-xml, python-xml, autoconf2.13
+Build-Conflicts: tcl8.4-dev, tk8.4-dev, tcl8.3-dev, tk8.3-dev, @PVER@-xml, python-xml, autoconf2.13
 XS-Python-Version: @VER@
-Standards-Version: 3.9.2
-Vcs-Browser: https://code.launchpad.net/~doko/python/pkg@VER@-debian
-Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg@VER@-debian
+Standards-Version: 3.9.3
+Homepage: http://python.org/
+Vcs-Browser: https://bitbucket.org/fk/deadsnakes-@PVER@
+Vcs-Hg: https://bitbucket.org/fk/deadsnakes-@PVER@
+X-Original-Vcs-Browser: https://code.launchpad.net/~doko/python/pkg@VER@
+X-Original-Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg@VER@
 
 Package: @PVER@
 Architecture: any
 Priority: @PRIO@
 Depends: @PVER@-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
 Suggests: @PVER@-doc, binutils
-Provides: @PVER@-cjkcodecs, @PVER@-ctypes, @PVER@-elementtree, @PVER@-celementtree, @PVER@-wsgiref, @PVER@-profiler
+Provides: python@VER@-cjkcodecs, python@VER@-ctypes, python@VER@-elementtree, python@VER@-celementtree, python@VER@-wsgiref, @PVER@-profiler, python@VER@-plistlib
 XB-Python-Version: @VER@
 Description: An interactive high-level object-oriented language (version @VER@)
  Version @VER@ of the high-level, interactive object oriented language,
@@ -29,7 +38,6 @@ Priority: @MINPRIO@
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: @PVER@
 Suggests: binfmt-support
-Replaces: @PVER@ (<< 2.7.1~rc1-2~)
 Conflicts: binfmt-support (<< 1.1.2)
 XB-Python-Runtime: @PVER@
 XB-Python-Version: @VER@
@@ -44,7 +52,6 @@ Architecture: any
 Section: libs
 Priority: @PRIO@
 Depends: @PVER@ (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Replaces: @PVER@ (<< 2.6)
 Description: Shared Python runtime library (version @VER@)
  Version @VER@ of the high-level, interactive object oriented language,
  includes an extensive class library with lots of goodies for
@@ -55,20 +62,19 @@ Description: Shared Python runtime library (version @VER@)
 
 Package: @PVER@-examples
 Architecture: all
-Depends: @PVER@ (>= ${source:Version}), ${misc:Depends}
-Description: Examples for the Python language (v@VER@)
- Examples, Demos and Tools for Python (v@VER@). These are files included in
- the upstream Python distribution (v@VER@).
+Depends: @PVER@ (>= ${binary:Version}), ${misc:Depends}
+Description: Examples for the Python language (version @VER@)
+ Examples, Demos and Tools for Python (version @VER@). These are files included
+ in the upstream Python distribution (version @VER@).
 
 Package: @PVER@-dev
 Architecture: any
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@ (= ${binary:Version}), libexpat1-dev, libssl-dev, ${shlibs:Depends}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
-Replaces: @PVER@ (<< 2.7-3)
-Description: Header files and a static library for Python (v@VER@)
+Description: Header files and a static library for Python (version @VER@)
  Header files, a static library and development tools for building
- Python (v@VER@) modules, extending the Python interpreter or embedding
- Python (v@VER@) in applications.
+ Python (version @VER@) modules, extending the Python interpreter or embedding
+ Python (version @VER@) in applications.
  .
  Maintainers of Python packages should read README.maintainers.
 
@@ -76,32 +82,10 @@ Package: idle-@PVER@
 Architecture: all
 Depends: @PVER@, @PVER@-tk, ${misc:Depends}
 Enhances: @PVER@
-Replaces: @PVER@ (<< 2.6.1-2)
 XB-Python-Version: @VER@
-Description: An IDE for Python (v@VER@) using Tkinter
- IDLE is an Integrated Development Environment for Python (v@VER@).
+Description: An IDE for Python (version @VER@) using Tkinter
+ IDLE is an Integrated Development Environment for Python (version @VER@).
  IDLE is written using Tkinter and therefore quite platform-independent.
-
-Package: @PVER@-doc
-Section: doc
-Architecture: all
-Depends: libjs-jquery, ${misc:Depends}
-Suggests: @PVER@
-Description: Documentation for the high-level object-oriented language Python (v@VER@)
- These is the official set of documentation for the interactive high-level
- object-oriented language Python (v@VER@). All documents are provided
- in HTML format. The package consists of ten documents:
- .
-   * What's New in Python@VER@
-   * Tutorial
-   * Python Library Reference
-   * Macintosh Module Reference
-   * Python Language Reference
-   * Extending and Embedding Python
-   * Python/C API Reference
-   * Installing Python Modules
-   * Documenting Python
-   * Distributing Python Modules
 
 Package: @PVER@-dbg
 Section: debug
@@ -113,29 +97,45 @@ Description: Debug Build of the Python Interpreter (version @VER@)
  Python interpreter configured with --pydebug. Dynamically loaded modules are
  searched in /usr/lib/@PVER@/lib-dynload/debug first.
 
+Package: @PVER@-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}, libjs-jquery
+Suggests: @PVER@
+Description: Documentation for the high-level object-oriented language Python (version @VER@)
+ These is the official set of documentation for the interactive high-level
+ object-oriented language Python (version @VER@). All documents are provided
+ in HTML format. The package consists of ten documents:
+ .
+   * What's New in Python @VER@
+   * Tutorial
+   * Python Library Reference
+   * Macintosh Module Reference
+   * Python Language Reference
+   * Extending and Embedding Python
+   * Python/C API Reference
+   * Installing Python Modules
+   * Documenting Python
+   * Distributing Python Modules
 
 Package: @PVER@-tk
 Architecture: any
 Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-tk-deadsnakes
-Replaces: python-tk-deadsnakes
 Provides: ${python:Provides}
 Suggests: tix, @PVER@-tk-dbg
 XB-Python-Version: ${python:Versions}
-Description: Tkinter - Writing Tk applications with Python (v@VER@)
- A module for writing portable GUI applications with Python (v@VER@) using Tk.
+Description: Tkinter - Writing Tk applications with Python (version @VER@)
+ A module for writing portable GUI applications with Python (version @VER@) using Tk.
  Also known as Tkinter.
 
 Package: @PVER@-gdbm
 Architecture: any
 Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-gdbm-deadsnakes
-Replaces: python-gdbm-deadsnakes
 Provides: ${python:Provides}
 Suggests: @PVER@-gdbm-dbg
 XB-Python-Version: ${python:Versions}
-Description: GNU dbm database support for Python (v@VER@)
- GNU dbm database module for Python (v@VER@). Install this if you want to
+Description: GNU dbm database support for Python (version @VER@)
+ GNU dbm database module for Python (version @VER@). Install this if you want to
  create or read GNU dbm database files with Python.
 
 Package: @PVER@-tk-dbg
@@ -143,10 +143,8 @@ Architecture: any
 Priority: extra
 Section: debug
 Depends: @PVER@, ${python:Depends}, @PVER@-tk (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-tk-deadsnakes-dbg
-Replaces: python-tk-deadsnakes-dbg
-Description: Tkinter - Writing Tk applications with Python (v@VER@ debug extension)
- A module for writing portable GUI applications with Python (v@VER@) using Tk.
+Description: Tkinter - Writing Tk applications with Python (version @VER@ debug extension)
+ A module for writing portable GUI applications with Python (version @VER@) using Tk.
  Also known as Tkinter.
  .
  This package contains the extensions built for the python debug interpreter.
@@ -156,10 +154,8 @@ Architecture: any
 Priority: extra
 Section: debug
 Depends: @PVER@, ${python:Depends}, @PVER@-gdbm (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Conflicts: python-gdbm-deadsnakes-dbg
-Replaces: python-gdbm-deadsnakes-dbg
-Description: GNU dbm database support for Python (v@VER@ debug extension)
- GNU dbm database module for Python (v@VER@). Install this if you want to
+Description: GNU dbm database support for Python (version @VER@ debug extension)
+ GNU dbm database module for Python (version @VER@). Install this if you want to
  create or read GNU dbm database files with Python.
  .
  This package contains the extensions built for the python debug interpreter.
@@ -167,7 +163,7 @@ Description: GNU dbm database support for Python (v@VER@ debug extension)
 
 Package: @PVER@-complete
 Architecture: all
-Priority: @PRIO@
+Priority: extra
 Depends:
  @PVER@ (>= ${binary:Version}),
  @PVER@-minimal (>= ${binary:Version}),
@@ -182,7 +178,6 @@ Depends:
  @PVER@-tk-dbg (>= ${binary:Version}),
  @PVER@-gdbm-dbg (>= ${binary:Version}),
  ${shlibs:Depends}, ${misc:Depends}
-Suggests: python-distribute-deadsnakes
 XB-Python-Version: @VER@
 Description: An interactive high-level object-oriented language (version @VER@)
  Version @VER@ of the high-level, interactive object oriented language,
@@ -191,4 +186,3 @@ Description: An interactive high-level object-oriented language (version @VER@)
  .
  This package depends on all individual packages that were generated from the
  @PVER@ source package.
-
