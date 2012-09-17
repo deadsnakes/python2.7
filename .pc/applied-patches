@@ -30,3 +30,4 @@ langpack-gettext.diff
 deadsnakes-fix-libffi-header-search-path.diff
 deadsnakes-fix-posix-semaphore-check.diff
 deadsnakes-ncursesw-include-dir.diff
+deadsnakes-libdb-versions.diff

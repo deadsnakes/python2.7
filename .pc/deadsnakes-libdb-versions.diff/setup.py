@@ -800,8 +800,8 @@ class PyBuildExt(build_ext):
         # a release.  Most open source OSes come with one or more
         # versions of BerkeleyDB already installed.
 
-        max_db_ver = (5, 3)
-        min_db_ver = (4, 8)
+        max_db_ver = (4, 8)
+        min_db_ver = (4, 1)
         db_setup_debug = False   # verbose debug prints from this script?
 
         def allow_db_ver(db_ver):
