@@ -13,6 +13,7 @@ DEB_BUILD_OPTIONS := "nocheck nobench"
 
 DEB_HOST_ARCH		?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_ARCH_OS	?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
+DEB_HOST_ARCH_BITS	?= $(shell dpkg-architecture -qDEB_HOST_ARCH_BITS)
 
 changelog_values := $(shell dpkg-parsechangelog \
 			| awk '/^(Version|Source):/ {print $$2}')
@@ -574,7 +575,7 @@ stamps/stamp-control:
 		  <$$f >$$f2; \
 	  fi; \
 	done
-ifneq (,$(filter $(DEB_HOST_ARCH), alpha amd64 ia64 ppc64 sparc64 kfreebsd-amd64))
+ifeq ($(DEB_HOST_ARCH_BITS),64)
 	sed -i 's/\(Py_InitModule4[^@]*\)@/\1_64@/' \
 		debian/lib$(PVER).symbols debian/$(PVER)-dbg.symbols
 endif
