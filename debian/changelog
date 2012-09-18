@@ -1,3 +1,10 @@
+python2.7 (2.7.3-2+lucid1) lucid; urgency=low
+
+  * Clean up package build process and binary package structure.
+  * Build against unversioned libdb.
+
+ -- Felix Krull <f_krull@gmx.de>  Tue, 18 Sep 2012 16:21:41 +0200
+
 python2.7 (2.7.3-1+lucid1) lucid; urgency=low
 
   * Imported new upstream version 2.7.3.
