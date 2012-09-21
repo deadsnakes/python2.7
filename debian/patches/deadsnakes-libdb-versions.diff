@@ -1,6 +1,6 @@
 --- a/setup.py
 +++ b/setup.py
-@@ -800,8 +800,8 @@
+@@ -802,8 +802,8 @@
          # a release.  Most open source OSes come with one or more
          # versions of BerkeleyDB already installed.
  

@@ -432,6 +432,8 @@ class PyBuildExt(build_ext):
             '/lib', '/usr/lib',
             ]
         inc_dirs = self.compiler.include_dirs + ['/usr/include']
+        gnu_triplet = os.popen('dpkg-architecture -qDEB_HOST_GNU_TYPE').readline()[:-1]; print 'XXX', gnu_triplet
+        inc_dirs.append(os.path.join('/usr/include', gnu_triplet))
         exts = []
         missing = []
 
@@ -1950,10 +1952,7 @@ class PyBuildExt(build_ext):
             # in /usr/include/ffi
             inc_dirs.append('/usr/include/ffi')
 
-        ffi_inc = ["/usr/include/%s" % subprocess.check_output(
-                        "dpkg-architecture -qDEB_BUILD_GNU_TYPE",
-                        shell=True).strip(),
-                   sysconfig.get_config_var("LIBFFI_INCLUDEDIR")]
+        ffi_inc = [sysconfig.get_config_var("LIBFFI_INCLUDEDIR")]
         if not ffi_inc or ffi_inc[0] == '':
             ffi_inc = find_file('ffi.h', [], inc_dirs)
         if ffi_inc is not None:
