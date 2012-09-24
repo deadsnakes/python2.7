@@ -1,0 +1,15 @@
+# We always want the system libffi for the Ubuntu package.
+
+--- a/setup.py
++++ b/setup.py
+@@ -1977,6 +1977,10 @@
+             ext.libraries.append(ffi_lib)
+             self.use_system_libffi = True
+ 
++        if not self.use_system_libffi:
++            print >> sys.stderr, "Error: not using system libffi"
++            sys.exit(1)
++
+ 
+ class PyBuildInstall(install):
+     # Suppress the warning about installation into the lib_dynload
