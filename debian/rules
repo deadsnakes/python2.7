@@ -51,9 +51,6 @@ export NVER=2.8
 export PVER=python2.7
 export PRIORITY=$(shell echo $(VER) | tr -d '.')0
 
-# For setup.py to feast upon.
-#export DEB_HOST_MULTIARCH=$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
-
 PREVVER	:= $(shell awk '/^python/ && NR > 1 {print substr($$2,2,length($$2)-2); exit}' debian/changelog)
 
 # default versions are built from the python-defaults source package
@@ -422,7 +419,6 @@ else
 	    TESTOPTS="$(TESTOPTS)" 2>&1 \
 	    | tee $(buildd_shared)/test_results
 	@echo "END test shared"
-  ifeq (0,1)
   ifeq (,$(findstring $(DEB_HOST_ARCH), alpha))
 	@echo "BEGIN test debug"
 	-time \
@@ -431,7 +427,6 @@ else
 	    TESTOPTS="$(TESTOPTS)" 2>&1 \
 	    | tee $(buildd_debug)/test_results
 	@echo "END test debug"
-  endif
   endif
 endif
 	cp -p $(buildd_static)/test_results debian/
@@ -608,7 +603,6 @@ endif
 	: # remove files which are not packaged
 	rm -f $(d)/usr/bin/smtpd.py
 	rm -rf $(d)/usr/lib/python$(VER)/ctypes/macholib
-	rm -f $(d)/usr/lib/pkgconfig/python.pc
 
 	: # fix some file permissions
 	chmod a-x $(d)/$(scriptdir)/{fractions,lib-tk/Tix}.py
@@ -627,12 +621,8 @@ endif
 
 	: # versioned install only
 	rm -f $(d)/usr/bin/python-config
-
 	mv $(d)/usr/bin/2to3 $(d)/usr/bin/2to3-$(VER)
-
-#	: # remove the bsddb stuff
-#	rm -rf $(d)/$(scriptdir)/bsddb
-#	rm -f $(d)/$(scriptdir)/lib-dynload/_bsddb.so
+	rm -f $(d)/usr/lib/pkgconfig/python.pc
 
 	: # Remove version information from the egg-info file
 	mv $(d)/$(scriptdir)/lib-dynload/Python-$(VER)*.egg-info \
@@ -647,7 +637,7 @@ endif
 	: # install the shared library
 	cp -p $(buildd_shared)/libpython$(VER).so.1.0 $(d_lib)/usr/lib/
 	ln -sf libpython$(VER).so.1.0 $(d_lib)/usr/lib/libpython$(VER).so.1
-	ln -sf ../../libpython$(VER).so.1 \
+	ln -sf ../../libpython$(VER).so \
 		$(d_lib)/$(scriptdir)/config/libpython$(VER).so
 	ln -sf $(p_base) $(d_lib)/usr/share/doc/$(p_lib)
 
@@ -685,7 +675,14 @@ endif
 		usr/include/$(PVER)/pyconfig.h \
 		$(scriptdir)/site.py
 
-#		$(foreach i,$(MIN_EXTS),$(scriptdir)/lib-dynload/$(i).so) \
+	rv=0; \
+	for i in $(MIN_EXTS); do \
+	  if [ -f $(d)/$(scriptdir)/lib-dynload/$$i.so ]; then \
+	    echo >&2 "extension $$i not mentioned in Setup.dist"; \
+	    rv=1; \
+	  fi; \
+	done; \
+	exit $$rv;
 
 	: # Install sitecustomize.py.
 	cp -p debian/sitecustomize.py $(d_min)/etc/$(PVER)/
@@ -711,14 +708,13 @@ endif
 		usr/include/python$(VER) \
 		usr/lib/libpython$(VER).so \
 		usr/lib/pkgconfig/python-$(VER).pc \
+		usr/bin/$(PVER)-config \
 		usr/lib/python$(VER)/distutils/command/wininst-*.exe
 	mv $(d)/usr/lib/libpython$(VER).a $(d_dev)/usr/lib/$(PVER)/config/
 
+	#rm $(d)/usr/lib/libpython$(VER).a
 	dh_link -p$(p_dev) usr/lib/python$(VER)/config/libpython$(VER).a \
 		usr/lib/libpython$(VER).a
-
-	: # install $(PVER)-config into $(p_dev)
-	dh_movefiles -p$(p_dev) --sourcedir=$(d) usr/bin/$(PVER)-config
 
 	cp -p $(buildd_shared)/libpython$(VER)-pic.a \
 		$(d_dev)/usr/lib/python$(VER)/config/
@@ -733,7 +729,7 @@ ifeq ($(with_tk),yes)
 endif
 
 ifeq ($(with_gdbm),yes)
-	: # gdbm and dbm modules into $(p_gdbm).
+	: # Move GDBM files into $(p_gdbm)
 	dh_installdirs -p$(p_gdbm) \
 		usr/lib/python$(VER)/lib-dynload
 	DH_COMPAT=2 dh_movefiles -p$(p_gdbm) --sourcedir=$(d) \
@@ -826,10 +822,9 @@ endif
 		$(d_idle)/usr/share/doc/$(p_idle)/README.Debian
 
 	: # The rest goes into $(p_base)
-	mkdir -p $(d)/usr/lib/python$(VER)/dist-packages
 	(cd $(d) && tar cf - .) | (cd $(d_base) && tar xpf -)
-	sh debian/dh_rmemptydirs -p$(p_base)
 	rm -f $(d_base)/usr/bin/python
+	dh_installdirs -p$(p_base) usr/lib/$(PVER)/dist-packages
 
 	: # Install menu icon
 	dh_installdirs -p$(p_base) usr/share/pixmaps
@@ -850,11 +845,12 @@ endif
 	-find debian -name '*.py[co]' | xargs rm -f
 
 	: # remove empty directories, when all components are in place
-	-find debian ! -name lib-dynload -type d -empty -delete
+	-find debian ! -name lib-dynload ! -name dist-packages -type d -empty -delete
 
 	: # install debug package
 	rm -rf $(d)-dbg
 	$(MAKE) -C $(buildd_debug) install DESTDIR=$(CURDIR)/$(d)-dbg
+
 	dh_installdirs -p$(p_dbg) \
 		usr/bin \
 		usr/share/man/man1 \
@@ -880,15 +876,6 @@ endif
 	  -e '/^Cflags:/s,python$(VER),python$(VER)_d,' \
 	  $(d)-dbg/usr/lib/pkgconfig/python-$(VER).pc \
 	  > $(d_dbg)/usr/lib/pkgconfig/python-$(VER)-dbg.pc
-	
-ifeq ($(with_gdbm),yes)
-	# move debug files to corresponding debug package
-	dh_installdirs -p$(p_gdbm_dbg) $(scriptdir)/lib-dynload
-	dh_install --autodest -p$(p_gdbm_dbg) --sourcedir $(d_dbg) \
-		$(scriptdir)/lib-dynload/gdbm_d.so
-endif
-	rm -f $(d_dbg)/$(scriptdir)/lib-dynload/gdbm_d.so
-	rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/gdbm.so
 
 ifeq ($(with_tk),yes)
 	# move debug files to corresponding debug package
@@ -896,10 +883,17 @@ ifeq ($(with_tk),yes)
 	dh_install --autodest -p$(p_tk_dbg) --sourcedir $(d_dbg) \
 		$(scriptdir)/lib-dynload/_tkinter_d.so
 endif
-	rm -f $(d_dbg)/$(scriptdir)/lib-dynload/_tkinter_d.so
-	rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/_tkinter.so
+	#rm -f $(d_dbg)/$(scriptdir)/lib-dynload/_tkinter*.so
+	#rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/_tkinter*.so
 
-
+ifeq ($(with_gdbm),yes)
+	# move debug files to corresponding debug package
+	dh_installdirs -p$(p_gdbm_dbg) $(scriptdir)/lib-dynload
+	dh_install --autodest -p$(p_gdbm_dbg) --sourcedir $(d_dbg) \
+		$(scriptdir)/lib-dynload/gdbm_d.so
+endif
+	#rm -f $(d_dbg)/$(scriptdir)/lib-dynload/gdbm_d.so
+	#rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/gdbm_d.so
 
 	cp -a $(d)-dbg/$(scriptdir)/config_d $(d_dbg)/$(scriptdir)/
 	ln -sf ../../libpython$(VER)_d.so \
@@ -988,15 +982,16 @@ binary-arch: build install
 	-find debian ! -perm -200 -print -exec chmod +w {} \;
 
 ifneq ($(with_tk),yes)
-	rm -f $(d_base)/$(scriptdir)/lib-dynload/_tkinter.so
+	rm -f $(d_base)/$(scriptdir)/lib-dynload/_tkinter*.so
 else
 	dh_strip -p$(p_tk) --dbg-package=$(p_tk_dbg)
 endif
 ifneq ($(with_gdbm),yes)
-	rm -f $(d_base)/$(scriptdir)/lib-dynload/gdbm.so
+	rm -f $(d_base)/$(scriptdir)/lib-dynload/gdbm*.so
 else
 	dh_strip -p$(p_gdbm) --dbg-package=$(p_gdbm_dbg)
 endif
+
 	dh_strip -a -N$(p_dbg) -N$(p_tk) -N$(p_gdbm) -Xdebug -Xdbg --dbg-package=$(p_dbg)
 	cp Tools/gdb/libpython.py $(d_dbg)/usr/lib/debug/usr/bin/$(PVER)-gdb.py
 	ln -sf $(PVER)-gdb.py $(d_dbg)/usr/lib/debug/usr/bin/$(PVER)-dbg-gdb.py
