@@ -699,7 +699,6 @@ endif
 		usr/include \
 		usr/lib
 	cp -p Misc/HISTORY Misc/README.valgrind Misc/gdbinit \
-		debian/README.maintainers \
 		debian/test_results $(buildd_static)/pybench.log \
 	    $(d_dev)/usr/share/doc/python$(VER)/
 
@@ -819,13 +818,8 @@ endif
 		$(d_idle)/usr/share/applications/idle-$(PVER).desktop
 
 	: # those packages have own README.Debian's
-	install -m 644 -p debian/README.$(p_base) \
-		$(d_base)/usr/share/doc/$(PVER)/README.Debian
 	install -m 644 -p debian/README.$(p_idle) \
 		$(d_idle)/usr/share/doc/$(p_idle)/README.Debian
-ifeq ($(with_tk),yes)
-	cp -p debian/README.Tk $(d_tk)/usr/share/doc/$(p_tk)/
-endif
 
 	: # The rest goes into $(p_base)
 	mkdir -p $(d)/usr/lib/python$(VER)/dist-packages
