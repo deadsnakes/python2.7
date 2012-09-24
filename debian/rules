@@ -584,7 +584,7 @@ install: $(build_target) stamps/stamp-install
 stamps/stamp-install: stamps/stamp-build control-file stamps/stamp-control
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 
 	: # make install into tmp and subsequently move the files into
