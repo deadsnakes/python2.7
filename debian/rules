@@ -9,6 +9,9 @@ export SHELL = /bin/bash
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+# Preserve these generated files when cleaning so they're included in the source package
+PRESERVE_FILES := "debian/control:debian/source.lintian-overrides"
+
 DEB_BUILD_OPTIONS := "nocheck nobench"
 
 DEB_HOST_ARCH		?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
@@ -537,32 +540,7 @@ endif
 	  && rm -f debian/control.tmp && exit 0; \
 	  mv debian/control.tmp debian/control
 
-
-
-clean: control-file
-	dh_testdir
-	dh_testroot
-	rm -rf stamps
-	rm -f debian/test_results
-
-	$(MAKE) -C Doc clean
-	sed 's/^@/#/' Makefile.pre.in | $(MAKE) -f - srcdir=. distclean
-	rm -rf Lib/test/db_home
-	rm -rf $(buildd_static) $(buildd_shared) $(buildd_debug) $(buildd_shdebug)
-	find -name '*.py[co]' | xargs -r rm -f
-	rm -f Lib/lib2to3/*.pickle
-	rm -rf locales
-	rm -rf $(d)-dbg
-
-	for f in debian/*.in; do \
-	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
-	  if [ $$f2 != debian/control ]; then \
-	    rm -f $$f2; \
-	  fi; \
-	done
-	dh_clean
-
-stamps/stamp-control:
+generated-files: control-file
 	: # We have to prepare the various control files
 
 	for f in debian/*.in; do \
@@ -579,6 +557,32 @@ ifeq ($(DEB_HOST_ARCH_BITS),64)
 	sed -i 's/\(Py_InitModule4[^@]*\)@/\1_64@/' \
 		debian/lib$(PVER).symbols debian/$(PVER)-dbg.symbols
 endif
+
+stamps/stamp-control: generated-files
+	touch stamps/stamp-control
+
+clean: generated-files
+	dh_testdir
+	dh_testroot
+	rm -rf stamps
+	rm -f debian/test_results
+
+	$(MAKE) -C Doc clean
+	sed 's/^@/#/' Makefile.pre.in | $(MAKE) -f - srcdir=. distclean
+	rm -rf Lib/test/db_home
+	rm -rf $(buildd_static) $(buildd_shared) $(buildd_debug) $(buildd_shdebug)
+	find -name '*.py[co]' | xargs -r rm -f
+	rm -f Lib/lib2to3/*.pickle
+	rm -rf locales
+	rm -rf $(d)-dbg
+
+	for f in debian/*.in; do \
+	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
+	  if [[ "$(PRESERVE_FILES)" != *"$$f2"* ]]; then \
+	    rm -f $$f2; \
+	  fi; \
+	done
+	dh_clean
 
 install: $(build_target) stamps/stamp-install
 stamps/stamp-install: stamps/stamp-build control-file stamps/stamp-control
