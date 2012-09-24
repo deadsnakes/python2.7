@@ -2,7 +2,7 @@
 
 --- a/setup.py
 +++ b/setup.py
-@@ -1977,6 +1977,10 @@
+@@ -1976,6 +1976,10 @@
              ext.libraries.append(ffi_lib)
              self.use_system_libffi = True
  

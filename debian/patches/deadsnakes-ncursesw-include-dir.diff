@@ -7,7 +7,7 @@
 
 --- a/setup.py
 +++ b/setup.py
-@@ -1248,6 +1248,7 @@
+@@ -1247,6 +1247,7 @@
          # Curses support, requiring the System V version of curses, often
          # provided by the ncurses library.
          panel_library = 'panel'
@@ -15,7 +15,7 @@
          if curses_library.startswith('ncurses'):
              if curses_library == 'ncursesw':
                  # Bug 1464056: If _curses.so links with ncursesw,
-@@ -1255,7 +1256,8 @@
+@@ -1254,7 +1255,8 @@
                  panel_library = 'panelw'
              curses_libs = [curses_library]
              exts.append( Extension('_curses', ['_cursesmodule.c'],
@@ -25,7 +25,7 @@
          elif curses_library == 'curses' and platform != 'darwin':
                  # OSX has an old Berkeley curses, not good enough for
                  # the _curses module.
-@@ -1275,7 +1277,8 @@
+@@ -1274,7 +1276,8 @@
          if (module_enabled(exts, '_curses') and
              self.compiler.find_library_file(lib_dirs, panel_library)):
              exts.append( Extension('_curses_panel', ['_curses_panel.c'],

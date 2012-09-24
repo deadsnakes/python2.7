@@ -1,14 +1,6 @@
 --- a/setup.py
 +++ b/setup.py
-@@ -6,6 +6,7 @@
- import sys, os, imp, re, optparse
- from glob import glob
- from platform import machine as platform_machine
-+import subprocess
- import sysconfig
- 
- from distutils import log
-@@ -431,6 +432,8 @@
+@@ -431,6 +431,8 @@
              '/lib', '/usr/lib',
              ]
          inc_dirs = self.compiler.include_dirs + ['/usr/include']
