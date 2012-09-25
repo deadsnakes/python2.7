@@ -998,7 +998,7 @@ endif
 	ln -sf ../bin/$(PVER)-gdb.py \
 		$(d_dbg)/usr/lib/debug/usr/lib/lib$(PVER).so.1.0-gdb.py
 	ln -sf ../bin/$(PVER)-gdb.py \
-		$(d_dbg)/usr/lib/lib$(PVER)_d.so.1.0-gdb.py
+		$(d_dbg)/usr/lib/debug/usr/lib/lib$(PVER)_d.so.1.0-gdb.py
 	dh_link -a
 	dh_compress -a -X.py
 	dh_fixperms -a
