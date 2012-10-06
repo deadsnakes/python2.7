@@ -1,6 +1,3 @@
-# idlelib images
-@PVER@ binary: image-file-in-usr-lib
-
 # yes, we have to
 @PVER@ binary: depends-on-python-minimal
 
@@ -9,3 +6,5 @@
 
 # license file referred by the standard library
 @PVER@ binary: extra-license-file
+
+@PVER@ binary: binary-without-manpage usr/bin/2to3-@VER@
