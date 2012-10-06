@@ -33,3 +33,4 @@ deadsnakes-ncursesw-include-dir.diff
 deadsnakes-libdb-versions.diff
 deadsnakes-assert-use-system-ffi.diff
 deadsnakes-add-heapq-to-setup.dist.diff
+deadsnakes-no-rpath.diff
