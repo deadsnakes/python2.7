@@ -3,4 +3,4 @@
 @PVER@-dbg binary: binary-without-manpage usr/bin/@PVER@-dbg-config
 
 # yeah that's fine
-@PVER@-dbg: python-script-but-no-python-dep usr/lib/debug/*
+@PVER@-dbg: python-script-but-no-python-dep
