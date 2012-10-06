@@ -911,11 +911,6 @@ endif
 	cp -p $(buildd_debug)/pyconfig.h $(d_dbg)/usr/include/$(PVER)_d/
 	ln -sf $(PVER).1.gz $(d_dbg)/usr/share/man/man1/$(PVER)-dbg.1.gz
 
-	for i in debian/*.overrides; do \
-	  b=$$(basename $$i .overrides); \
-	  install -D -m 644 $$i debian/$$b/usr/share/lintian/overrides/$$b; \
-	done
-
 	touch stamps/stamp-install
 
 # Build architecture-independent files here.
@@ -960,6 +955,7 @@ binary-indep: $(install_target) $(build_target) stamps/stamp-build-doc stamps/st
 	done
 	-find $(d_doc) -name '*.txt' -perm 755 -exec chmod 644 {} \;
 
+	dh_lintian -i $(dh_args)
 	dh_installdeb -i $(dh_args)
 	dh_gencontrol -i $(dh_args)
 	dh_md5sums -i $(dh_args)
@@ -1017,6 +1013,7 @@ endif
 # which either can be built as builtin or extension.
 	sed -ri '/^ (_check_|asdl_|fast_save_|init)/d' \
 	  $(d_lib)/DEBIAN/symbols $(d_dbg)/DEBIAN/symbols
+	dh_lintian -a
 	dh_installdeb -a
 	dh_shlibdeps -a
 	dh_gencontrol -a
