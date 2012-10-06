@@ -176,7 +176,7 @@ Depends:
  python2.7-gdbm (>= ${binary:Version}),
  python2.7-tk-dbg (>= ${binary:Version}),
  python2.7-gdbm-dbg (>= ${binary:Version}),
- ${shlibs:Depends}, ${misc:Depends}
+ ${misc:Depends}
 XB-Python-Version: 2.7
 Description: Interactive high-level object-oriented language (version 2.7)
  Version 2.7 of the high-level, interactive object oriented language,
