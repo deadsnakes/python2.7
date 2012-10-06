@@ -863,6 +863,7 @@
  Py_GetPythonHome@Base @VER@
  Py_GetRecursionLimit@Base @VER@
  Py_GetVersion@Base @VER@
+ Py_HashRandomizationFlag@Base @VER@
  Py_IgnoreEnvironmentFlag@Base @VER@
  Py_IncRef@Base @VER@
  Py_Initialize@Base @VER@
@@ -962,6 +963,8 @@
  _PyNumber_ConvertIntegralToInt@Base @VER@
  _PyOS_GetOpt@Base @VER@
  _PyOS_ReadlineTState@Base @VER@
+ _PyOS_ResetGetOpt@Base @VER@
+ _PyOS_URandom@Base @VER@
  _PyOS_ascii_formatd@Base @VER@
  _PyOS_ascii_strtod@Base @VER@
  _PyOS_optarg@Base @VER@
@@ -992,6 +995,7 @@
  _PyObject_Str@Base @VER@
  _PyParser_Grammar@Base @VER@
  _PyParser_TokenNames@Base @VER@
+ _PyRandom_Init@Base @VER@
  _PySequence_IterSearch@Base @VER@
  _PySet_Next@Base @VER@
  _PySet_NextEntry@Base @VER@
@@ -1080,6 +1084,7 @@
  _Py_Global@Base @VER@
  _Py_HashDouble@Base @VER@
  _Py_HashPointer@Base @VER@
+ _Py_HashSecret@Base @VER@
  _Py_If@Base @VER@
  _Py_IfExp@Base @VER@
  _Py_Import@Base @VER@
@@ -1220,6 +1225,7 @@
  (optional)init_collections@Base @VER@
  (optional)init_functools@Base @VER@
  (optional)init_hashlib@Base @VER@
+ (optional)init_heapq@Base @VER@
  (optional)init_locale@Base @VER@
  (optional)init_random@Base @VER@
  (optional)init_socket@Base @VER@

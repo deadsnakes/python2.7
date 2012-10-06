@@ -21,6 +21,7 @@ libpython@VER@_d.so.1.0 python@VER@-dbg #MINVER#
  _Py_ForgetReference@Base @VER@
  _Py_GetObjects@Base @VER@
  _Py_GetRefTotal@Base @VER@
+ _Py_HashSecret_Initialized@Base @VER@
  _Py_NegativeRefcount@Base @VER@
  _Py_NewReference@Base @VER@
  _Py_PrintReferenceAddresses@Base @VER@
