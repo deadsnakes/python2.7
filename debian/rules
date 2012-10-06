@@ -883,8 +883,8 @@ ifeq ($(with_tk),yes)
 	dh_install --autodest -p$(p_tk_dbg) --sourcedir $(d_dbg) \
 		$(scriptdir)/lib-dynload/_tkinter_d.so
 endif
-	#rm -f $(d_dbg)/$(scriptdir)/lib-dynload/_tkinter*.so
-	#rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/_tkinter*.so
+	rm -f $(d_dbg)/$(scriptdir)/lib-dynload/_tkinter*.so
+	rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/_tkinter*.so
 
 ifeq ($(with_gdbm),yes)
 	# move debug files to corresponding debug package
@@ -892,8 +892,8 @@ ifeq ($(with_gdbm),yes)
 	dh_install --autodest -p$(p_gdbm_dbg) --sourcedir $(d_dbg) \
 		$(scriptdir)/lib-dynload/gdbm_d.so
 endif
-	#rm -f $(d_dbg)/$(scriptdir)/lib-dynload/gdbm_d.so
-	#rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/gdbm_d.so
+	rm -f $(d_dbg)/$(scriptdir)/lib-dynload/gdbm_d.so
+	rm -f $(d_dbg)/usr/lib/debug/$(scriptdir)/lib-dynload/gdbm_d.so
 
 	cp -a $(d)-dbg/$(scriptdir)/config_d $(d_dbg)/$(scriptdir)/
 	ln -sf ../../libpython$(VER)_d.so \
