@@ -103,7 +103,7 @@ Architecture: all
 Depends: ${misc:Depends}, libjs-jquery
 Suggests: @PVER@
 Description: Documentation for the high-level object-oriented language Python (version @VER@)
- These is the official set of documentation for the interactive high-level
+ This is the official set of documentation for the interactive high-level
  object-oriented language Python (version @VER@). All documents are provided
  in HTML format. The package consists of ten documents:
  .
