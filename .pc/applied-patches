@@ -29,5 +29,4 @@ langpack-gettext.diff
 deadsnakes-fix-posix-semaphore-check.diff
 deadsnakes-ncursesw-include-dir.diff
 deadsnakes-assert-use-system-ffi.diff
-deadsnakes-add-heapq-to-setup.dist.diff
 deadsnakes-no-rpath.diff
