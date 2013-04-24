@@ -1,5 +1,6 @@
-python2.7 (2.7.3-3+lucid1) lucid; urgency=low
+python2.7 (2.7.4-1+lucid1) lucid; urgency=low
 
+  * Imported new upstream version Python 2.7.4.
   * Ensure system libffi is always used.
   * Install gdb Python support scripts in different locations.
 
