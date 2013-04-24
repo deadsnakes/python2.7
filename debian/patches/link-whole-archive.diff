@@ -2,7 +2,7 @@
 
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -401,7 +401,7 @@
+@@ -437,7 +437,7 @@
  $(BUILDPYTHON):	Modules/python.o $(LIBRARY) $(LDLIBRARY)
  		$(LINKCC) $(LDFLAGS) $(LINKFORSHARED) -o $@ \
  			Modules/python.o \
@@ -10,4 +10,4 @@
 +			-Wl,--whole-archive $(BLDLIBRARY) -Wl,--no-whole-archive $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
  
  platform: $(BUILDPYTHON)
- 	$(RUNSHARED) ./$(BUILDPYTHON) -E -c 'import sys ; from sysconfig import get_platform ; print get_platform()+"-"+sys.version[0:3]' >platform
+ 	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print get_platform()+"-"+sys.version[0:3]' >platform

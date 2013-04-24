@@ -19,7 +19,8 @@ file index.html in that directory is returned if it exists, otherwise
 a directory listing is returned.  Now, you can point webchecker to the
 document tree in the local file system of your HTTP daemon, and have
 most of it checked.  In fact the default works this way if your local
-web tree is located at /usr/local/etc/httpd/htdpcs (the default for
+web tree is located at /var/www, which is the default for Debian
+GNU/Linux. Other systems use /usr/local/etc/httpd/htdocs (the default for
 the NCSA HTTP daemon and probably others).
 
 Report printed:

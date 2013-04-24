@@ -57,7 +57,7 @@ checkout:
 
 update: clean checkout
 
-build: checkout
+build:
 	mkdir -p build/$(BUILDER) build/doctrees
 	$(PYTHON) tools/sphinx-build.py $(ALLSPHINXOPTS)
 	@echo

@@ -240,7 +240,7 @@ class TestSysConfig(unittest.TestCase):
 
     def test_get_scheme_names(self):
         wanted = ('nt', 'nt_user', 'os2', 'os2_home', 'osx_framework_user',
-                  'posix_home', 'posix_prefix', 'posix_user')
+                  'posix_home', 'posix_prefix', 'posix_local', 'deb_system', 'posix_user')
         self.assertEqual(get_scheme_names(), wanted)
 
     def test_symlink(self):

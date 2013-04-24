@@ -17,7 +17,6 @@ platform-lsbrelease.diff
 bdist-wininst-notfound.diff
 setup-modules-ssl.diff
 makesetup-bashism.diff
-hurd-broken-poll.diff
 hurd-disable-nonworking-constants.diff
 enable-fpectl.diff
 statvfs-f_flag-constants.diff
@@ -30,10 +29,8 @@ link-whole-archive.diff
 # This patch is Ubuntu-specific.
 langpack-gettext.diff
 
-deadsnakes-fix-libffi-header-search-path.diff
 deadsnakes-fix-posix-semaphore-check.diff
 deadsnakes-ncursesw-include-dir.diff
-deadsnakes-libdb-versions.diff
 deadsnakes-assert-use-system-ffi.diff
 deadsnakes-add-heapq-to-setup.dist.diff
 deadsnakes-no-rpath.diff

@@ -2,7 +2,7 @@
 
 --- a/setup.py
 +++ b/setup.py
-@@ -368,9 +368,9 @@
+@@ -436,9 +436,9 @@
              os.unlink(tmpfile)
  
      def detect_modules(self):

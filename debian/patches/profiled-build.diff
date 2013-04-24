@@ -2,10 +2,10 @@
 
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -386,10 +386,10 @@
- 	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-generate" LIBS="$(LIBS) -lgcov"
+@@ -422,10 +422,10 @@
  
  run_profile_task:
+ 	: # FIXME: can't run for a cross build
 -	./$(BUILDPYTHON) $(PROFILE_TASK)
 +	-./$(BUILDPYTHON) $(PROFILE_TASK)
  

@@ -737,7 +737,7 @@ AC_SUBST(LIBRARY)
 AC_MSG_CHECKING(LIBRARY)
 if test -z "$LIBRARY"
 then
-	LIBRARY='libpython$(VERSION).a'
+	LIBRARY='libpython$(VERSION)$(DEBUG_EXT).a'
 fi
 AC_MSG_RESULT($LIBRARY)
 
@@ -883,8 +883,8 @@ if test $enable_shared = "yes"; then
 	  INSTSONAME="$LDLIBRARY".$SOVERSION
           ;;
     Linux*|GNU*|NetBSD*|FreeBSD*|DragonFly*|OpenBSD*)
-	  LDLIBRARY='libpython$(VERSION).so'
-	  BLDLIBRARY='-L. -lpython$(VERSION)'
+	  LDLIBRARY='libpython$(VERSION)$(DEBUG_EXT).so'
+	  BLDLIBRARY='-L. -lpython$(VERSION)$(DEBUG_EXT)'
 	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
 	  case $ac_sys_system in
 	      FreeBSD*)
@@ -1026,6 +1026,12 @@ then
 else AC_MSG_RESULT(no); Py_DEBUG='false'
 fi],
 [AC_MSG_RESULT(no)])
+
+if test "$Py_DEBUG" = 'true'
+then
+	DEBUG_EXT=_d
+fi
+AC_SUBST(DEBUG_EXT)
 
 # XXX Shouldn't the code above that fiddles with BASECFLAGS and OPT be
 # merged with this chunk of code?
@@ -1918,7 +1924,7 @@ then
 		esac
 		;;
 	CYGWIN*)   SO=.dll;;
-	*)	   SO=.so;;
+	*)	   SO=$DEBUG_EXT.so;;
 	esac
 else
 	# this might also be a termcap variable, see #610332
@@ -2025,8 +2031,8 @@ then
 		fi
 		;;
 	Linux*|GNU*|QNX*)
-		LDSHARED='$(CC) -shared'
-		LDCXXSHARED='$(CXX) -shared';;
+		LDSHARED='$(CC) -shared -Wl,-O1 -Wl,-Bsymbolic-functions'
+		LDCXXSHARED='$(CXX) -shared -Wl,-O1 -Wl,-Bsymbolic-functions';;
 	BSD/OS*/4*)
 		LDSHARED="gcc -shared"
 		LDCXXSHARED="g++ -shared";;
@@ -2128,7 +2134,7 @@ then
 	    LINKFORSHARED="-Wl,-E -Wl,+s";;
 #	    LINKFORSHARED="-Wl,-E -Wl,+s -Wl,+b\$(BINLIBDEST)/lib-dynload";;
 	BSD/OS/4*) LINKFORSHARED="-Xlinker -export-dynamic";;
-	Linux*|GNU*) LINKFORSHARED="-Xlinker -export-dynamic";;
+	Linux*|GNU*) LINKFORSHARED="-Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions";;
 	# -u libsys_s pulls in all symbols in libsys
 	Darwin/*) 
 		# -u _PyMac_Error is needed to pull in the mac toolbox glue,
@@ -3775,28 +3781,28 @@ LIBS=$LIBS_SAVE
 # isn't loaded by default, so an attempt to call
 # sem_open results in a 'Signal 12' error.
 AC_MSG_CHECKING(whether POSIX semaphores are enabled)
-AC_CACHE_VAL(ac_cv_posix_semaphores_enabled,
-AC_RUN_IFELSE([AC_LANG_SOURCE([[
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <semaphore.h>
-#include <sys/stat.h>
+AC_CACHE_VAL(ac_cv_posix_semaphores_enabled,ac_cv_posix_semaphores_enabled=yes
+#AC_RUN_IFELSE([AC_LANG_SOURCE([[
+##include <unistd.h>
+##include <fcntl.h>
+##include <stdio.h>
+##include <semaphore.h>
+##include <sys/stat.h>
 
-int main(void) {
-  sem_t *a = sem_open("/autoconf", O_CREAT, S_IRUSR|S_IWUSR, 0);
-  if (a == SEM_FAILED) {
-    perror("sem_open");
-    return 1;
-  }
-  sem_close(a);
-  sem_unlink("/autoconf");
-  return 0;
-}
-]])],
-[ac_cv_posix_semaphores_enabled=yes],
-[ac_cv_posix_semaphores_enabled=no],
-[ac_cv_posix_semaphores_enabled=yes])
+#int main(void) {
+#  sem_t *a = sem_open("/autoconf", O_CREAT, S_IRUSR|S_IWUSR, 0);
+#  if (a == SEM_FAILED) {
+#    perror("sem_open");
+#    return 1;
+#  }
+#  sem_close(a);
+#  sem_unlink("/autoconf");
+#  return 0;
+#}
+#]])],
+#[ac_cv_posix_semaphores_enabled=yes],
+#[ac_cv_posix_semaphores_enabled=no],
+#[ac_cv_posix_semaphores_enabled=yes])
 )
 AC_MSG_RESULT($ac_cv_posix_semaphores_enabled)
 if test $ac_cv_posix_semaphores_enabled = no
@@ -3807,32 +3813,32 @@ fi
 
 # Multiprocessing check for broken sem_getvalue
 AC_MSG_CHECKING(for broken sem_getvalue)
-AC_CACHE_VAL(ac_cv_broken_sem_getvalue,
-AC_RUN_IFELSE([AC_LANG_SOURCE([[
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <semaphore.h>
-#include <sys/stat.h>
+AC_CACHE_VAL(ac_cv_broken_sem_getvalue,ac_cv_broken_sem_getvalue=no
+#AC_RUN_IFELSE([AC_LANG_SOURCE([[
+##include <unistd.h>
+##include <fcntl.h>
+##include <stdio.h>
+##include <semaphore.h>
+##include <sys/stat.h>
 
-int main(void){
-  sem_t *a = sem_open("/autocftw", O_CREAT, S_IRUSR|S_IWUSR, 0);
-  int count;
-  int res;
-  if(a==SEM_FAILED){
-    perror("sem_open");
-    return 1;
+#int main(void){
+#  sem_t *a = sem_open("/autocftw", O_CREAT, S_IRUSR|S_IWUSR, 0);
+#  int count;
+#  int res;
+#  if(a==SEM_FAILED){
+#    perror("sem_open");
+#    return 1;
 
-  }
-  res = sem_getvalue(a, &count);
-  sem_close(a);
-  sem_unlink("/autocftw");
-  return res==-1 ? 1 : 0;
-}
-]])],
-[ac_cv_broken_sem_getvalue=no],
-[ac_cv_broken_sem_getvalue=yes],
-[ac_cv_broken_sem_getvalue=yes])
+#  }
+#  res = sem_getvalue(a, &count);
+#  sem_close(a);
+#  sem_unlink("/autocftw");
+#  return res==-1 ? 1 : 0;
+#}
+#]])],
+#[ac_cv_broken_sem_getvalue=no],
+#[ac_cv_broken_sem_getvalue=yes],
+#[ac_cv_broken_sem_getvalue=yes])
 )
 AC_MSG_RESULT($ac_cv_broken_sem_getvalue)
 if test $ac_cv_broken_sem_getvalue = yes

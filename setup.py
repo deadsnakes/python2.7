@@ -436,9 +436,9 @@ class PyBuildExt(build_ext):
             os.unlink(tmpfile)
 
     def detect_modules(self):
-        # Ensure that /usr/local is always used
-        add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
-        add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+        # On Debian /usr/local is always used, so we don't include it twice
+        #add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+        #add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
         self.add_multiarch_paths()
 
         # Add paths specified in the environment variables LDFLAGS and
@@ -1065,16 +1065,14 @@ class PyBuildExt(build_ext):
                 print "bsddb lib dir:", dblib_dir, " inc dir:", db_incdir
             db_incs = [db_incdir]
             dblibs = [dblib]
-            # We add the runtime_library_dirs argument because the
-            # BerkeleyDB lib we're linking against often isn't in the
-            # system dynamic library search path.  This is usually
-            # correct and most trouble free, but may cause problems in
-            # some unusual system configurations (e.g. the directory
-            # is on an NFS server that goes away).
+            # We don't add the runtime_library_dirs argument because the db
+            # library should always be in the dynamic library search path on
+            # Debian and later versions of lintian complain about rpath in
+            # binaries.
             exts.append(Extension('_bsddb', ['_bsddb.c'],
                                   depends = ['bsddb.h'],
                                   library_dirs=dblib_dir,
-                                  runtime_library_dirs=dblib_dir,
+                                  #runtime_library_dirs=dblib_dir,
                                   include_dirs=db_incs,
                                   libraries=dblibs))
         else:
@@ -1184,7 +1182,7 @@ class PyBuildExt(build_ext):
                                   include_dirs=["Modules/_sqlite",
                                                 sqlite_incdir],
                                   library_dirs=sqlite_libdir,
-                                  runtime_library_dirs=sqlite_libdir,
+                                  #runtime_library_dirs=sqlite_libdir,
                                   extra_link_args=sqlite_extra_link_args,
                                   libraries=["sqlite3",]))
         else:
@@ -1289,7 +1287,7 @@ class PyBuildExt(build_ext):
                         print "building dbm using bdb"
                         dbmext = Extension('dbm', ['dbmmodule.c'],
                                            library_dirs=dblib_dir,
-                                           runtime_library_dirs=dblib_dir,
+                                           #runtime_library_dirs=dblib_dir,
                                            include_dirs=db_incs,
                                            define_macros=[
                                                ('HAVE_BERKDB_H', None),
@@ -1337,6 +1335,7 @@ class PyBuildExt(build_ext):
         # Curses support, requiring the System V version of curses, often
         # provided by the ncurses library.
         panel_library = 'panel'
+        ncursesw_incdirs = ["/usr/include/ncursesw"]
         if curses_library.startswith('ncurses'):
             if curses_library == 'ncursesw':
                 # Bug 1464056: If _curses.so links with ncursesw,
@@ -1356,7 +1355,8 @@ class PyBuildExt(build_ext):
                 curses_libs = ['curses']
 
             exts.append( Extension('_curses', ['_cursesmodule.c'],
-                                   libraries = curses_libs) )
+                                   libraries = curses_libs,
+                                   include_dirs = ncursesw_incdirs) )
         else:
             missing.append('_curses')
 
@@ -1364,9 +1364,13 @@ class PyBuildExt(build_ext):
         if (module_enabled(exts, '_curses') and
             self.compiler.find_library_file(lib_dirs, panel_library)):
             exts.append( Extension('_curses_panel', ['_curses_panel.c'],
-                                   libraries = [panel_library] + curses_libs) )
+                                   libraries = [panel_library] + curses_libs,
+                                   include_dirs = ncursesw_incdirs) )
         else:
             missing.append('_curses_panel')
+
+        #fpectl fpectlmodule.c ...
+        exts.append( Extension('fpectl', ['fpectlmodule.c']) )
 
         # Andrew Kuchling's zlib module.  Note that some versions of zlib
         # 1.1.3 have security problems.  See CERT Advisory CA-2002-07:
@@ -2077,6 +2081,10 @@ class PyBuildExt(build_ext):
             ext.include_dirs.extend(ffi_inc)
             ext.libraries.append(ffi_lib)
             self.use_system_libffi = True
+
+        if not self.use_system_libffi:
+            print >> sys.stderr, "Error: not using system libffi"
+            sys.exit(1)
 
 
 class PyBuildInstall(install):

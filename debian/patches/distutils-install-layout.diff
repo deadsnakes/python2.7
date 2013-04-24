@@ -4,7 +4,7 @@
 
 --- a/Doc/install/index.rst
 +++ b/Doc/install/index.rst
-@@ -240,6 +240,8 @@
+@@ -238,6 +238,8 @@
  +-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
  | Platform        | Standard installation location                      | Default value                                    | Notes |
  +=================+=====================================================+==================================================+=======+
@@ -13,7 +13,7 @@
  | Unix (pure)     | :file:`{prefix}/lib/python{X.Y}/site-packages`      | :file:`/usr/local/lib/python{X.Y}/site-packages` | \(1)  |
  +-----------------+-----------------------------------------------------+--------------------------------------------------+-------+
  | Unix (non-pure) | :file:`{exec-prefix}/lib/python{X.Y}/site-packages` | :file:`/usr/local/lib/python{X.Y}/site-packages` | \(1)  |
-@@ -249,6 +251,14 @@
+@@ -247,6 +249,14 @@
  
  Notes:
  
@@ -28,7 +28,7 @@
  (1)
     Most Linux distributions include Python as a standard part of the system, so
     :file:`{prefix}` and :file:`{exec-prefix}` are usually both :file:`/usr` on
-@@ -433,6 +443,15 @@
+@@ -431,6 +441,15 @@
  
     /usr/bin/python setup.py install --prefix=/usr/local
  
@@ -44,7 +44,7 @@
  Another possibility is a network filesystem where the name used to write to a
  remote directory is different from the name used to read it: for example, the
  Python interpreter accessed as :file:`/usr/local/bin/python` might search for
-@@ -684,6 +703,17 @@
+@@ -682,6 +701,17 @@
  import them, this directory must be added to ``sys.path``.  There are several
  different ways to add the directory.
  
@@ -193,7 +193,7 @@
  
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -110,6 +110,7 @@
+@@ -115,6 +115,7 @@
      If 'prefix' is supplied, use it instead of sys.prefix or
      sys.exec_prefix -- i.e., ignore 'plat_specific'.
      """
@@ -201,7 +201,7 @@
      if prefix is None:
          prefix = plat_specific and EXEC_PREFIX or PREFIX
  
-@@ -118,6 +119,8 @@
+@@ -123,6 +124,8 @@
                                   "lib", "python" + get_python_version())
          if standard_lib:
              return libpython
@@ -255,7 +255,7 @@
      'posix_home': {
          'stdlib': '{base}/lib/python',
          'platstdlib': '{base}/lib/python',
-@@ -125,7 +145,7 @@
+@@ -129,7 +149,7 @@
  _PYTHON_BUILD = is_python_build()
  
  if _PYTHON_BUILD:
@@ -264,7 +264,7 @@
          _INSTALL_SCHEMES[scheme]['include'] = '{projectbase}/Include'
          _INSTALL_SCHEMES[scheme]['platinclude'] = '{srcdir}'
  
-@@ -159,8 +179,11 @@
+@@ -163,8 +183,11 @@
  
  def _get_default_scheme():
      if os.name == 'posix':
@@ -278,7 +278,7 @@
      return os.name
  
  def _getuserbase():
-@@ -272,7 +295,7 @@
+@@ -276,7 +299,7 @@
  def _get_makefile_filename():
      if _PYTHON_BUILD:
          return os.path.join(_PROJECT_BASE, "Makefile")
@@ -287,7 +287,7 @@
  
  
  def _init_posix(vars):
-@@ -357,7 +380,7 @@
+@@ -361,7 +384,7 @@
          else:
              inc_dir = _PROJECT_BASE
      else:
@@ -298,7 +298,7 @@
  def get_scheme_names():
 --- a/Lib/test/test_import.py
 +++ b/Lib/test/test_import.py
-@@ -246,7 +246,7 @@
+@@ -301,7 +301,7 @@
          with check_warnings(('', ImportWarning)):
              # Just a random non-package directory we always expect to be
              # somewhere in sys.path...
@@ -320,7 +320,7 @@
              self.assertEqual(dirs[1], wanted)
 --- a/Lib/test/test_sysconfig.py
 +++ b/Lib/test/test_sysconfig.py
-@@ -231,7 +231,7 @@
+@@ -240,7 +240,7 @@
  
      def test_get_scheme_names(self):
          wanted = ('nt', 'nt_user', 'os2', 'os2_home', 'osx_framework_user',

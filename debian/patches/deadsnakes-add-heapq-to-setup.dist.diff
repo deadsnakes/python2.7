@@ -1,6 +1,6 @@
 --- a/Modules/Setup.dist
 +++ b/Modules/Setup.dist
-@@ -184,6 +184,7 @@
+@@ -185,6 +185,7 @@
  #_pickle _pickle.c	# pickle accelerator
  #datetime datetimemodule.c	# date/time type
  #_bisect _bisectmodule.c	# Bisection algorithms

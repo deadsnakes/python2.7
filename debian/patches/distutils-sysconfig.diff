@@ -3,10 +3,10 @@
 
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -153,8 +153,9 @@
-     varies across Unices and is stored in Python's Makefile.
-     """
-     if compiler.compiler_type == "unix":
+@@ -173,8 +173,9 @@
+                 _osx_support.customize_compiler(_config_vars)
+                 _config_vars['CUSTOMIZED_OSX_COMPILER'] = 'True'
+ 
 -        (cc, cxx, opt, cflags, ccshared, ldshared, so_ext, ar, ar_flags) = \
 +        (cc, cxx, opt, cflags, opt, extra_cflags, basecflags, ccshared, ldshared, so_ext, ar, ar_flags) = \
              get_config_vars('CC', 'CXX', 'OPT', 'CFLAGS',
@@ -14,7 +14,7 @@
                              'CCSHARED', 'LDSHARED', 'SO', 'AR',
                              'ARFLAGS')
  
-@@ -200,8 +201,13 @@
+@@ -191,8 +192,13 @@
              cpp = cc + " -E"           # not always
          if 'LDFLAGS' in os.environ:
              ldshared = ldshared + ' ' + os.environ['LDFLAGS']

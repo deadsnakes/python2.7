@@ -21,7 +21,7 @@ OWNERNAME = "FAQ owner"                 # Name for feedback
 OWNEREMAIL = "nobody@anywhere.org"      # Email for feedback
 HOMEURL = "http://www.python.org"       # Related home page
 HOMENAME = "Python home"                # Name of related home page
-RCSBINDIR = "/usr/local/bin/"           # Directory containing RCS commands
+RCSBINDIR = "/usr/bin/"			# Directory containing RCS commands
                                         # (must end in a slash)
 
 # Parameters you can normally leave alone
