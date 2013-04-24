@@ -33,3 +33,4 @@ deadsnakes-fix-posix-semaphore-check.diff
 deadsnakes-ncursesw-include-dir.diff
 deadsnakes-assert-use-system-ffi.diff
 deadsnakes-no-rpath.diff
+deadsnakes-fix-libffi-header-search-path.diff
