@@ -4,7 +4,7 @@ python2.7 (2.7.4-1+lucid1) lucid; urgency=low
   * Ensure system libffi is always used.
   * Install gdb Python support scripts in different locations.
 
- -- Felix Krull <f_krull@gmx.de>  Sat, 06 Oct 2012 17:36:03 +0200
+ -- Felix Krull <f_krull@gmx.de>  Thu, 25 Apr 2013 14:15:49 +0200
 
 python2.7 (2.7.3-2+lucid1) lucid; urgency=low
 
