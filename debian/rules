@@ -1006,8 +1006,8 @@ endif
 	  fi; \
 	done
 
-	dh_makeshlibs -p$(p_lib) -V '$(p_lib)'
-	dh_makeshlibs -p$(p_dbg) -V '$(p_dbg)'
+	dh_makeshlibs -p$(p_lib) -V '$(p_lib)' -- -c4
+	dh_makeshlibs -p$(p_dbg) -V '$(p_dbg)' -- -c4
 # don't include the following symbols, found in extensions
 # which either can be built as builtin or extension.
 	sed -ri '/^ (_check_|asdl_|fast_save_|init)/d' \
