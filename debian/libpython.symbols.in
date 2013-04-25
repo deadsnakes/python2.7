@@ -944,11 +944,15 @@
  _PyImport_ReleaseLock@Base @VER@
  _PyImport_ReInitLock@Base @VER@
  _PyInstance_Lookup@Base @VER@
+ _PyInt_AsInt@Base 2.7.4
  _PyInt_Format@Base @VER@
  _PyInt_FormatAdvanced@Base @VER@
+ _PyInt_FromGid@Base 2.7.4
+ _PyInt_FromUid@Base 2.7.4
  _PyInt_Init@Base @VER@
  _PyList_Extend@Base @VER@
  _PyLong_AsByteArray@Base @VER@
+ _PyLong_AsInt@Base 2.7.4
  _PyLong_Copy@Base @VER@
  _PyLong_DigitValue@Base @VER@
  _PyLong_Format@Base @VER@
@@ -960,6 +964,7 @@
  _PyLong_NumBits@Base @VER@
  _PyLong_Sign@Base @VER@
  _PyModule_Clear@Base @VER@
+ _PyNode_SizeOf@Base 2.7.4
  _PyNumber_ConvertIntegralToInt@Base @VER@
  _PyOS_GetOpt@Base @VER@
  _PyOS_ReadlineTState@Base @VER@
@@ -1013,10 +1018,13 @@
  _PyThreadState_Prealloc@Base @VER@
  _PyThread_CurrentFrames@Base @VER@
  _PyTime_DoubleToTimet@Base @VER@
+ _PyTime_FloatTime@Base 2.7.4
  _PyTrash_delete_later@Base @VER@
  _PyTrash_delete_nesting@Base @VER@
  _PyTrash_deposit_object@Base @VER@
  _PyTrash_destroy_chain@Base @VER@
+ _PyTrash_thread_deposit_object@Base 2.7.4
+ _PyTrash_thread_destroy_chain@Base 2.7.4
  _PyTuple_MaybeUntrack@Base @VER@
  _PyTuple_Resize@Base @VER@
  _PyType_Lookup@Base @VER@
@@ -1081,6 +1089,7 @@
  _Py_For@Base @VER@
  _Py_FunctionDef@Base @VER@
  _Py_GeneratorExp@Base @VER@
+ _Py_Gid_Converter@Base 2.7.4
  _Py_Global@Base @VER@
  _Py_HashDouble@Base @VER@
  _Py_HashPointer@Base @VER@
@@ -1122,6 +1131,7 @@
  _Py_TryExcept@Base @VER@
  _Py_TryFinally@Base @VER@
  _Py_Tuple@Base @VER@
+ _Py_Uid_Converter@Base 2.7.4
  _Py_UnaryOp@Base @VER@
  _Py_VaBuildValue_SizeT@Base @VER@
  _Py_While@Base @VER@
