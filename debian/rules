@@ -623,13 +623,12 @@ endif
 	rm -f $(d)/usr/bin/python-config
 	mv $(d)/usr/bin/2to3 $(d)/usr/bin/2to3-$(VER)
 	rm -f $(d)/usr/lib/pkgconfig/python.pc
+	rm -f $(d)/usr/bin/python2 $(d)/usr/bin/python2-config $(d)/usr/lib/pkgconfig/python2.pc
+	rm -f $(d)/usr/share/man/man1/python{,2}.1
 
 	: # Remove version information from the egg-info file
 	mv $(d)/$(scriptdir)/lib-dynload/Python-$(VER)*.egg-info \
 		$(d)/$(scriptdir)/lib-dynload/Python-$(VER).egg-info
-
-	: # Remove python2 binary.
-	rm -f $(d)/usr/bin/python2 $(d)/usr/bin/python2-config $(d)/usr/lib/pkgconfig/python2.pc
 
 	dh_installdirs -p$(p_lib) \
 		$(scriptdir)/config \
