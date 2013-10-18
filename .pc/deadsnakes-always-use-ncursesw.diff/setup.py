@@ -718,12 +718,9 @@ class PyBuildExt(build_ext):
                         break
         # Issue 7384: If readline is already linked against curses,
         # use the same library for the readline and curses modules.
-        # Actually, don't do that: having unicode support in curses can be neat,
-        # and it doesn't seem to be an actual problem on Linux since python2.6
-        # in Lucid mixes ncurses and ncursesw without reported ill effects.
-        #if 'curses' in readline_termcap_library:
-        #    curses_library = readline_termcap_library
-        if self.compiler.find_library_file(lib_dirs, 'ncursesw'):
+        if 'curses' in readline_termcap_library:
+            curses_library = readline_termcap_library
+        elif self.compiler.find_library_file(lib_dirs, 'ncursesw'):
             curses_library = 'ncursesw'
         elif self.compiler.find_library_file(lib_dirs, 'ncurses'):
             curses_library = 'ncurses'
