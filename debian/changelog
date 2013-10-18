@@ -1,3 +1,10 @@
+python2.7 (2.7.4-2+lucid1) lucid; urgency=low
+
+  * Link _curses against ncursesw if possible, regardless of what readline
+    does.
+
+ -- Felix Krull <f_krull@gmx.de>  Fri, 18 Oct 2013 16:16:49 +0200
+
 python2.7 (2.7.4-1+lucid1) lucid; urgency=low
 
   * Imported new upstream version Python 2.7.4.
