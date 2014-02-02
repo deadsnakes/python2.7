@@ -189,9 +189,8 @@ ManPage = ReadonlyManPage
 def test():
     import os
     import sys
-    # XXX This directory may be different on your system,
-    #     it is here set for Debian GNU/Linux.
-    MANDIR = '/usr/share/man'
+    # XXX This directory may be different on your system
+    MANDIR = '/usr/local/man/mann'
     DEFAULTPAGE = 'Tcl'
     formatted = 0
     if sys.argv[1:] and sys.argv[1] == '-f':

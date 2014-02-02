@@ -46,10 +46,6 @@ const struct filedescr _PyImport_DynLoadFiletab[] = {
     {"module.exe", "rb", C_EXTENSION},
     {"MODULE.EXE", "rb", C_EXTENSION},
 #else
-#ifdef Py_DEBUG
-    {"_d.so", "rb", C_EXTENSION},
-    {"module_d.so", "rb", C_EXTENSION},
-#endif
     {".so", "rb", C_EXTENSION},
     {"module.so", "rb", C_EXTENSION},
 #endif

@@ -4893,10 +4893,8 @@ init_socket(void)
 #ifdef  SO_OOBINLINE
     PyModule_AddIntConstant(m, "SO_OOBINLINE", SO_OOBINLINE);
 #endif
-#ifndef __GNU__
 #ifdef  SO_REUSEPORT
     PyModule_AddIntConstant(m, "SO_REUSEPORT", SO_REUSEPORT);
-#endif
 #endif
 #ifdef  SO_SNDBUF
     PyModule_AddIntConstant(m, "SO_SNDBUF", SO_SNDBUF);
