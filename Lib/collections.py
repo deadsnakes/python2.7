@@ -259,8 +259,6 @@ class {typename}(tuple):
         'Return a new OrderedDict which maps field names to their values'
         return OrderedDict(zip(self._fields, self))
 
-    __dict__ = property(_asdict)
-
     def _replace(_self, **kwds):
         'Return a new {typename} object replacing specified fields with new values'
         result = _self._make(map(kwds.pop, {field_names!r}, _self))
@@ -271,6 +269,12 @@ class {typename}(tuple):
     def __getnewargs__(self):
         'Return self as a plain tuple.  Used by copy and pickle.'
         return tuple(self)
+
+    __dict__ = _property(_asdict)
+
+    def __getstate__(self):
+        'Exclude the OrderedDict from pickling'
+        pass
 
 {field_defs}
 '''
@@ -365,7 +369,7 @@ def namedtuple(typename, field_names, verbose=False, rename=False):
     result = namespace[typename]
 
     # For pickling to work, the __module__ variable needs to be set to the frame
-    # where the named tuple is created.  Bypass this step in enviroments where
+    # where the named tuple is created.  Bypass this step in environments where
     # sys._getframe is not defined (Jython for example) or sys._getframe is not
     # defined for arguments greater than 0 (IronPython).
     try:

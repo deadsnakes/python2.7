@@ -71,7 +71,8 @@ More on Modules
 
 A module can contain executable statements as well as function definitions.
 These statements are intended to initialize the module. They are executed only
-the *first* time the module is imported somewhere. [#]_
+the *first* time the module name is encountered in an import statement. [#]_
+(They are also run if the file is executed as a script.)
 
 Each module has its own private symbol table, which is used as the global symbol
 table by all functions defined in the module. Thus, the author of a module can
@@ -367,7 +368,9 @@ There are also many different operations you might want to perform on sound data
 (such as mixing, adding echo, applying an equalizer function, creating an
 artificial stereo effect), so in addition you will be writing a never-ending
 stream of modules to perform these operations.  Here's a possible structure for
-your package (expressed in terms of a hierarchical filesystem)::
+your package (expressed in terms of a hierarchical filesystem):
+
+.. code-block:: text
 
    sound/                          Top-level package
          __init__.py               Initialize the sound package
@@ -464,7 +467,7 @@ list of module names that should be imported when ``from package import *`` is
 encountered.  It is up to the package author to keep this list up-to-date when a
 new version of the package is released.  Package authors may also decide not to
 support it, if they don't see a use for importing \* from their package.  For
-example, the file :file:`sounds/effects/__init__.py` could contain the following
+example, the file :file:`sound/effects/__init__.py` could contain the following
 code::
 
    __all__ = ["echo", "surround", "reverse"]
@@ -550,6 +553,6 @@ modules found in a package.
 .. rubric:: Footnotes
 
 .. [#] In fact function definitions are also 'statements' that are 'executed'; the
-   execution of a module-level function enters the function name in the module's
-   global symbol table.
+   execution of a module-level function definition enters the function name in
+   the module's global symbol table.
 

@@ -196,6 +196,10 @@ PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
 _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
 HOST_GNU_TYPE=  @host@
 
+# Tcl and Tk config info from --with-tcltk-includes and -libs options
+TCLTK_INCLUDES=	@TCLTK_INCLUDES@
+TCLTK_LIBS=	@TCLTK_LIBS@
+
 # The task to run while instrument when building the profile-opt target
 PROFILE_TASK=	$(srcdir)/Tools/pybench/pybench.py -n 2 --with-gc --with-syscheck
 #PROFILE_TASK=	$(srcdir)/Lib/test/regrtest.py
@@ -437,20 +441,26 @@ $(BUILDPYTHON):	Modules/python.o $(LIBRARY) $(LDLIBRARY)
 			Modules/python.o \
 			$(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
 
-platform: $(BUILDPYTHON)
+platform: $(BUILDPYTHON) pybuilddir.txt
 	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print get_platform()+"-"+sys.version[0:3]' >platform
 
+# Create build directory and generate the sysconfig build-time data there.
+# pybuilddir.txt contains the name of the build dir and is used for
+# sys.path fixup -- see Modules/getpath.c.
+pybuilddir.txt: $(BUILDPYTHON)
+		$(RUNSHARED) $(PYTHON_FOR_BUILD) -S -m sysconfig --generate-posix-vars
 
 # Build the shared modules
 # Under GNU make, MAKEFLAGS are sorted and normalized; the 's' for
 # -s, --silent or --quiet is always the first char.
 # Under BSD make, MAKEFLAGS might be " -s -v x=y".
-sharedmods: $(BUILDPYTHON)
+sharedmods: $(BUILDPYTHON) pybuilddir.txt
 	@case "$$MAKEFLAGS" in \
 	    *\ -s*|s*) quiet="-q";; \
 	    *) quiet="";; \
 	esac; \
 	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
+		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
 		$(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build
 
 # Build static library
@@ -919,7 +929,7 @@ PLATMACDIRS= plat-mac plat-mac/Carbon plat-mac/lib-scriptpackages \
 	plat-mac/lib-scriptpackages/Terminal
 PLATMACPATH=:plat-mac:plat-mac/lib-scriptpackages
 LIBSUBDIRS=	lib-tk lib-tk/test lib-tk/test/test_tkinter \
-		lib-tk/test/test_ttk site-packages test test/data \
+		lib-tk/test/test_ttk site-packages test test/audiodata test/data \
 		test/cjkencodings test/decimaltestdata test/xmltestdata test/subprocessdata \
 		test/tracedmodules \
 		encodings compiler hotshot \
@@ -955,7 +965,7 @@ libinstall:	build_all $(srcdir)/Lib/$(PLATDIR) $(srcdir)/Modules/xxmodule.c
 		else	true; \
 		fi; \
 	done
-	@for i in $(srcdir)/Lib/*.py $(srcdir)/Lib/*.doc $(srcdir)/Lib/*.egg-info ; \
+	@for i in $(srcdir)/Lib/*.py `cat pybuilddir.txt`/_sysconfigdata.py $(srcdir)/Lib/*.doc $(srcdir)/Lib/*.egg-info ; \
 	do \
 		if test -x $$i; then \
 			$(INSTALL_SCRIPT) $$i $(DESTDIR)$(LIBDEST); \
@@ -1133,6 +1143,7 @@ sharedinstall: sharedmods
 		--install-scripts=$(BINDIR) \
 		--install-platlib=$(DESTSHARED) \
 		--root=$(DESTDIR)/
+	-rm $(DESTDIR)$(DESTSHARED)/_sysconfigdata.py*
 
 # Here are a couple of targets for MacOSX again, to install a full
 # framework-based Python. frameworkinstall installs everything, the
@@ -1288,11 +1299,12 @@ distclean: clobber
 		Modules/Setup Modules/Setup.local Modules/Setup.config \
 		Modules/ld_so_aix Modules/python.exp Misc/python.pc
 	-rm -f python*-gdb.py
-	find $(srcdir) '(' -name '*.fdc' -o -name '*~' \
-			   -o -name '[@,#]*' -o -name '*.old' \
-			   -o -name '*.orig' -o -name '*.rej' \
-			   -o -name '*.bak' ')' \
-			   -exec rm -f {} ';'
+	-rm -f pybuilddir.txt
+	find $(srcdir)/[a-zA-Z]* '(' -name '*.fdc' -o -name '*~' \
+				     -o -name '[@,#]*' -o -name '*.old' \
+				     -o -name '*.orig' -o -name '*.rej' \
+				     -o -name '*.bak' ')' \
+				     -exec rm -f {} ';'
 
 # Check for smelly exported symbols (not starting with Py/_Py)
 smelly: all
