@@ -103,6 +103,7 @@ are:
   sys			builtin
   syslog		extension
   sysconfig		module
+  _sysconfigdata	module
   tempfile		module
   textwrap		module
   time			extension
