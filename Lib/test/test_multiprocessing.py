@@ -1385,7 +1385,7 @@ class _TestRemoteManager(BaseTestCase):
         authkey = os.urandom(32)
 
         manager = QueueManager(
-            address=('localhost', 0), authkey=authkey, serializer=SERIALIZER
+            address=(test.test_support.HOST, 0), authkey=authkey, serializer=SERIALIZER
             )
         manager.start()
 
@@ -1423,7 +1423,7 @@ class _TestManagerRestart(BaseTestCase):
     def test_rapid_restart(self):
         authkey = os.urandom(32)
         manager = QueueManager(
-            address=('localhost', 0), authkey=authkey, serializer=SERIALIZER)
+            address=(test.test_support.HOST, 0), authkey=authkey, serializer=SERIALIZER)
         srvr = manager.get_server()
         addr = srvr.address
         # Close the connection.Listener socket which gets opened as a part
@@ -2287,15 +2287,15 @@ class TestInitializers(unittest.TestCase):
 # Verifies os.close(sys.stdin.fileno) vs. sys.stdin.close() behavior
 #
 
-def _ThisSubProcess(q):
+def _this_sub_process(q):
     try:
         item = q.get(block=False)
     except Queue.Empty:
         pass
 
-def _TestProcess(q):
+def _test_process(q):
     queue = multiprocessing.Queue()
-    subProc = multiprocessing.Process(target=_ThisSubProcess, args=(queue,))
+    subProc = multiprocessing.Process(target=_this_sub_process, args=(queue,))
     subProc.daemon = True
     subProc.start()
     subProc.join()
@@ -2332,7 +2332,7 @@ class TestStdinBadfiledescriptor(unittest.TestCase):
 
     def test_queue_in_process(self):
         queue = multiprocessing.Queue()
-        proc = multiprocessing.Process(target=_TestProcess, args=(queue,))
+        proc = multiprocessing.Process(target=_test_process, args=(queue,))
         proc.start()
         proc.join()
 
@@ -2430,13 +2430,111 @@ class TestFlags(unittest.TestCase):
             [sys.executable, '-E', '-B', '-O', '-c', prog])
         child_flags, grandchild_flags = json.loads(data.decode('ascii'))
         self.assertEqual(child_flags, grandchild_flags)
+
+#
+# Issue #17555: ForkAwareThreadLock
+#
+
+class TestForkAwareThreadLock(unittest.TestCase):
+    # We recurisvely start processes.  Issue #17555 meant that the
+    # after fork registry would get duplicate entries for the same
+    # lock.  The size of the registry at generation n was ~2**n.
+
+    @classmethod
+    def child(cls, n, conn):
+        if n > 1:
+            p = multiprocessing.Process(target=cls.child, args=(n-1, conn))
+            p.start()
+            p.join()
+        else:
+            conn.send(len(util._afterfork_registry))
+        conn.close()
+
+    def test_lock(self):
+        r, w = multiprocessing.Pipe(False)
+        l = util.ForkAwareThreadLock()
+        old_size = len(util._afterfork_registry)
+        p = multiprocessing.Process(target=self.child, args=(5, w))
+        p.start()
+        new_size = r.recv()
+        p.join()
+        self.assertLessEqual(new_size, old_size)
+
+#
+# Issue #17097: EINTR should be ignored by recv(), send(), accept() etc
+#
+
+class TestIgnoreEINTR(unittest.TestCase):
+
+    @classmethod
+    def _test_ignore(cls, conn):
+        def handler(signum, frame):
+            pass
+        signal.signal(signal.SIGUSR1, handler)
+        conn.send('ready')
+        x = conn.recv()
+        conn.send(x)
+        conn.send_bytes(b'x'*(1024*1024))   # sending 1 MB should block
+
+    @unittest.skipUnless(hasattr(signal, 'SIGUSR1'), 'requires SIGUSR1')
+    def test_ignore(self):
+        conn, child_conn = multiprocessing.Pipe()
+        try:
+            p = multiprocessing.Process(target=self._test_ignore,
+                                        args=(child_conn,))
+            p.daemon = True
+            p.start()
+            child_conn.close()
+            self.assertEqual(conn.recv(), 'ready')
+            time.sleep(0.1)
+            os.kill(p.pid, signal.SIGUSR1)
+            time.sleep(0.1)
+            conn.send(1234)
+            self.assertEqual(conn.recv(), 1234)
+            time.sleep(0.1)
+            os.kill(p.pid, signal.SIGUSR1)
+            self.assertEqual(conn.recv_bytes(), b'x'*(1024*1024))
+            time.sleep(0.1)
+            p.join()
+        finally:
+            conn.close()
+
+    @classmethod
+    def _test_ignore_listener(cls, conn):
+        def handler(signum, frame):
+            pass
+        signal.signal(signal.SIGUSR1, handler)
+        l = multiprocessing.connection.Listener()
+        conn.send(l.address)
+        a = l.accept()
+        a.send('welcome')
+
+    @unittest.skipUnless(hasattr(signal, 'SIGUSR1'), 'requires SIGUSR1')
+    def test_ignore_listener(self):
+        conn, child_conn = multiprocessing.Pipe()
+        try:
+            p = multiprocessing.Process(target=self._test_ignore_listener,
+                                        args=(child_conn,))
+            p.daemon = True
+            p.start()
+            child_conn.close()
+            address = conn.recv()
+            time.sleep(0.1)
+            os.kill(p.pid, signal.SIGUSR1)
+            time.sleep(0.1)
+            client = multiprocessing.connection.Client(address)
+            self.assertEqual(client.recv(), 'welcome')
+            p.join()
+        finally:
+            conn.close()
+
 #
 #
 #
 
 testcases_other = [OtherTest, TestInvalidHandle, TestInitializers,
                    TestStdinBadfiledescriptor, TestTimeouts, TestNoForkBomb,
-                   TestFlags]
+                   TestFlags, TestForkAwareThreadLock, TestIgnoreEINTR]
 
 #
 #

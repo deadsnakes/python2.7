@@ -15,7 +15,6 @@
 import sys
 
 from sre_constants import *
-from _sre import MAXREPEAT
 
 SPECIAL_CHARS = ".\\[{()*+?^$|"
 REPEAT_CHARS = "*+?{"
@@ -142,12 +141,12 @@ class SubPattern:
         # determine the width (min, max) for this subpattern
         if self.width:
             return self.width
-        lo = hi = 0L
+        lo = hi = 0
         UNITCODES = (ANY, RANGE, IN, LITERAL, NOT_LITERAL, CATEGORY)
         REPEATCODES = (MIN_REPEAT, MAX_REPEAT)
         for op, av in self.data:
             if op is BRANCH:
-                i = sys.maxint
+                i = MAXREPEAT - 1
                 j = 0
                 for av in av[1]:
                     l, h = av.getwidth()
@@ -165,14 +164,14 @@ class SubPattern:
                 hi = hi + j
             elif op in REPEATCODES:
                 i, j = av[2].getwidth()
-                lo = lo + long(i) * av[0]
-                hi = hi + long(j) * av[1]
+                lo = lo + i * av[0]
+                hi = hi + j * av[1]
             elif op in UNITCODES:
                 lo = lo + 1
                 hi = hi + 1
             elif op == SUCCESS:
                 break
-        self.width = int(min(lo, sys.maxint)), int(min(hi, sys.maxint))
+        self.width = min(lo, MAXREPEAT - 1), min(hi, MAXREPEAT)
         return self.width
 
 class Tokenizer:
@@ -549,7 +548,8 @@ def _parse(source, state):
                         if not name:
                             raise error("missing group name")
                         if not isname(name):
-                            raise error, "bad character in group name"
+                            raise error("bad character in group name %r" %
+                                        name)
                     elif sourcematch("="):
                         # named backreference
                         name = ""
@@ -563,7 +563,8 @@ def _parse(source, state):
                         if not name:
                             raise error("missing group name")
                         if not isname(name):
-                            raise error, "bad character in group name"
+                            raise error("bad character in backref group name "
+                                        "%r" % name)
                         gid = state.groupdict.get(name)
                         if gid is None:
                             raise error, "unknown group name"

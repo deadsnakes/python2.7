@@ -2,6 +2,7 @@ from test.test_support import verbose, run_unittest, import_module
 from test.test_support import precisionbigmemtest, _2G, cpython_only
 import re
 from re import Scanner
+import sre_constants
 import sys
 import string
 import traceback
@@ -426,6 +427,8 @@ class ReTests(unittest.TestCase):
                                   u"\u2222").group(1), u"\u2222")
         self.assertEqual(re.match(u"([\u2222\u2223])",
                                   u"\u2222", re.UNICODE).group(1), u"\u2222")
+        r = u'[%s]' % u''.join(map(unichr, range(256, 2**16, 255)))
+        self.assertEqual(re.match(r, u"\uff01", re.UNICODE).group(), u"\uff01")
 
     def test_big_codesize(self):
         # Issue #1160
@@ -886,6 +889,36 @@ class ReTests(unittest.TestCase):
         self.assertRaises(OverflowError, re.compile, r".{,%d}" % MAXREPEAT)
         self.assertRaises(OverflowError, re.compile, r".{%d,}?" % MAXREPEAT)
 
+    def test_backref_group_name_in_exception(self):
+        # Issue 17341: Poor error message when compiling invalid regex
+        with self.assertRaisesRegexp(sre_constants.error, '<foo>'):
+            re.compile('(?P=<foo>)')
+
+    def test_group_name_in_exception(self):
+        # Issue 17341: Poor error message when compiling invalid regex
+        with self.assertRaisesRegexp(sre_constants.error, '\?foo'):
+            re.compile('(?P<?foo>)')
+
+    def test_issue17998(self):
+        for reps in '*', '+', '?', '{1}':
+            for mod in '', '?':
+                pattern = '.' + reps + mod + 'yz'
+                self.assertEqual(re.compile(pattern, re.S).findall('xyz'),
+                                 ['xyz'], msg=pattern)
+                pattern = pattern.encode()
+                self.assertEqual(re.compile(pattern, re.S).findall(b'xyz'),
+                                 [b'xyz'], msg=pattern)
+
+
+    def test_bug_2537(self):
+        # issue 2537: empty submatches
+        for outer_op in ('{0,}', '*', '+', '{1,187}'):
+            for inner_op in ('{0,}', '*', '?'):
+                r = re.compile("^((x|y)%s)%s" % (inner_op, outer_op))
+                m = r.match("xyyzy")
+                self.assertEqual(m.group(0), "xyy")
+                self.assertEqual(m.group(1), "")
+                self.assertEqual(m.group(2), "y")
 
 def run_re_tests():
     from test.re_tests import tests, SUCCEED, FAIL, SYNTAX_ERROR

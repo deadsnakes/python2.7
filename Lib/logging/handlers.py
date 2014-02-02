@@ -1,4 +1,4 @@
-# Copyright 2001-2012 by Vinay Sajip. All Rights Reserved.
+# Copyright 2001-2013 by Vinay Sajip. All Rights Reserved.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose and without fee is hereby granted,
@@ -18,7 +18,7 @@
 Additional handlers for the logging package for Python. The core package is
 based on PEP 282 and comments thereto in comp.lang.python.
 
-Copyright (C) 2001-2012 Vinay Sajip. All Rights Reserved.
+Copyright (C) 2001-2013 Vinay Sajip. All Rights Reserved.
 
 To use, simply 'import logging.handlers' and log away!
 """
@@ -137,9 +137,11 @@ class RotatingFileHandler(BaseRotatingHandler):
             dfn = self.baseFilename + ".1"
             if os.path.exists(dfn):
                 os.remove(dfn)
-            os.rename(self.baseFilename, dfn)
-            #print "%s -> %s" % (self.baseFilename, dfn)
-        self.stream = self._open()
+            # Issue 18940: A file may not have been created if delay is True.
+            if os.path.exists(self.baseFilename):
+                os.rename(self.baseFilename, dfn)
+        if not self.delay:
+            self.stream = self._open()
 
     def shouldRollover(self, record):
         """
@@ -343,17 +345,14 @@ class TimedRotatingFileHandler(BaseRotatingHandler):
         dfn = self.baseFilename + "." + time.strftime(self.suffix, timeTuple)
         if os.path.exists(dfn):
             os.remove(dfn)
-        os.rename(self.baseFilename, dfn)
+        # Issue 18940: A file may not have been created if delay is True.
+        if os.path.exists(self.baseFilename):
+            os.rename(self.baseFilename, dfn)
         if self.backupCount > 0:
-            # find the oldest log file and delete it
-            #s = glob.glob(self.baseFilename + ".20*")
-            #if len(s) > self.backupCount:
-            #    s.sort()
-            #    os.remove(s[0])
             for s in self.getFilesToDelete():
                 os.remove(s)
-        #print "%s -> %s" % (self.baseFilename, dfn)
-        self.stream = self._open()
+        if not self.delay:
+            self.stream = self._open()
         newRolloverAt = self.computeRollover(currentTime)
         while newRolloverAt <= currentTime:
             newRolloverAt = newRolloverAt + self.interval
@@ -737,13 +736,17 @@ class SysLogHandler(logging.Handler):
     }
 
     def __init__(self, address=('localhost', SYSLOG_UDP_PORT),
-                 facility=LOG_USER, socktype=socket.SOCK_DGRAM):
+                 facility=LOG_USER, socktype=None):
         """
         Initialize a handler.
 
         If address is specified as a string, a UNIX socket is used. To log to a
         local syslogd, "SysLogHandler(address="/dev/log")" can be used.
-        If facility is not specified, LOG_USER is used.
+        If facility is not specified, LOG_USER is used. If socktype is
+        specified as socket.SOCK_DGRAM or socket.SOCK_STREAM, that specific
+        socket type will be used. For Unix sockets, you can also specify a
+        socktype of None, in which case socket.SOCK_DGRAM will be used, falling
+        back to socket.SOCK_STREAM.
         """
         logging.Handler.__init__(self)
 
@@ -756,18 +759,37 @@ class SysLogHandler(logging.Handler):
             self._connect_unixsocket(address)
         else:
             self.unixsocket = 0
+            if socktype is None:
+                socktype = socket.SOCK_DGRAM
             self.socket = socket.socket(socket.AF_INET, socktype)
             if socktype == socket.SOCK_STREAM:
                 self.socket.connect(address)
+            self.socktype = socktype
         self.formatter = None
 
     def _connect_unixsocket(self, address):
-        self.socket = socket.socket(socket.AF_UNIX, self.socktype)
+        use_socktype = self.socktype
+        if use_socktype is None:
+            use_socktype = socket.SOCK_DGRAM
+        self.socket = socket.socket(socket.AF_UNIX, use_socktype)
         try:
             self.socket.connect(address)
+            # it worked, so set self.socktype to the used type
+            self.socktype = use_socktype
         except socket.error:
             self.socket.close()
-            raise
+            if self.socktype is not None:
+                # user didn't specify falling back, so fail
+                raise
+            use_socktype = socket.SOCK_STREAM
+            self.socket = socket.socket(socket.AF_UNIX, use_socktype)
+            try:
+                self.socket.connect(address)
+                # it worked, so set self.socktype to the used type
+                self.socktype = use_socktype
+            except socket.error:
+                self.socket.close()
+                raise
 
     # curious: when talking to the unix-domain '/dev/log' socket, a
     #   zero-terminator seems to be required.  this string is placed
@@ -833,6 +855,7 @@ class SysLogHandler(logging.Handler):
                 try:
                     self.socket.send(msg)
                 except socket.error:
+                    self.socket.close() # See issue 17981
                     self._connect_unixsocket(self.address)
                     self.socket.send(msg)
             elif self.socktype == socket.SOCK_DGRAM:
