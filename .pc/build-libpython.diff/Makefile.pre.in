@@ -400,7 +400,7 @@ LIBRARY_OBJS=	\
 		$(PYTHON_OBJS) \
 		$(MODULE_OBJS) \
 		$(SIGNAL_OBJS) \
-		$(sort $(MODOBJS))
+		$(MODOBJS)
 
 #########################################################################
 # Rules
@@ -474,7 +474,7 @@ $(LIBRARY): $(LIBRARY_OBJS)
 	$(AR) $(ARFLAGS) $@ $(OBJECT_OBJS)
 	$(AR) $(ARFLAGS) $@ $(PYTHON_OBJS)
 	$(AR) $(ARFLAGS) $@ $(MODULE_OBJS) $(SIGNAL_OBJS)
-	$(AR) $(ARFLAGS) $@ $(sort $(MODOBJS))
+	$(AR) $(ARFLAGS) $@ $(MODOBJS)
 	$(RANLIB) $@
 
 libpython$(VERSION)$(DEBUG_EXT).so: $(LIBRARY_OBJS)
