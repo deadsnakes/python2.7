@@ -486,6 +486,7 @@
  PyOS_ascii_atof@Base @VER@
  PyOS_ascii_formatd@Base @VER@
  PyOS_ascii_strtod@Base @VER@
+ _PyOS_mystrnicmp_hack@Base 2.7.6
  PyOS_double_to_string@Base @VER@
  PyOS_getsig@Base @VER@
  PyOS_mystricmp@Base @VER@
