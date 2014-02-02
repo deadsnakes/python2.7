@@ -1,3 +1,10 @@
+python2.7 (2.7.6-1+lucid1) lucid; urgency=low
+
+  * Imported new upstream version Python 2.7.6.
+  * Issue #6: Ensure that ncursesw headers are detected correctly.
+
+ -- Felix Krull <f_krull@gmx.de>  Sun, 02 Feb 2014 13:59:38 +0100
+
 python2.7 (2.7.4-2+lucid1) lucid; urgency=low
 
   * Link _curses against ncursesw if possible, regardless of what readline
