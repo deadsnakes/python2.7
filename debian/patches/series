@@ -8,7 +8,6 @@ distutils-sysconfig.diff
 tkinter-import.diff
 link-opt.diff
 debug-build.diff
-webbrowser.diff
 linecache.diff
 doc-nodownload.diff
 profiled-build.diff

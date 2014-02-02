@@ -418,6 +418,9 @@ call_character_handler(xmlparseobject *self, const XML_Char *buffer, int len)
     if (!have_handler(self, CharacterData))
         return -1;
 
+    if (!have_handler(self, CharacterData))
+        return -1;
+
     args = PyTuple_New(1);
     if (args == NULL)
         return -1;

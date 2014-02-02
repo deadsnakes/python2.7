@@ -9,8 +9,8 @@ import re
 from Tkinter import *
 from ManPage import ManPage
 
-MANNDIRLIST = ['/depot/sundry/man/mann','/usr/local/man/mann']
-MAN3DIRLIST = ['/depot/sundry/man/man3','/usr/local/man/man3']
+MANNDIRLIST = ['/depot/sundry/man/mann','/usr/share/man/mann']
+MAN3DIRLIST = ['/depot/sundry/man/man3','/usr/share/man/man3']
 
 foundmanndir = 0
 for dir in MANNDIRLIST:

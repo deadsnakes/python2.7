@@ -1,6 +1,6 @@
 --- a/setup.py
 +++ b/setup.py
-@@ -718,9 +718,12 @@
+@@ -721,9 +721,12 @@
                          break
          # Issue 7384: If readline is already linked against curses,
          # use the same library for the readline and curses modules.

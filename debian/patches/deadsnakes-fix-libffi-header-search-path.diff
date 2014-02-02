@@ -1,6 +1,6 @@
 --- a/setup.py
 +++ b/setup.py
-@@ -2057,7 +2057,9 @@
+@@ -2103,7 +2103,9 @@
              # in /usr/include/ffi
              inc_dirs.append('/usr/include/ffi')
  

@@ -2,7 +2,7 @@
 
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -422,10 +422,10 @@
+@@ -426,10 +426,10 @@
  
  run_profile_task:
  	: # FIXME: can't run for a cross build
