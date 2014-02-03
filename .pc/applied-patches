@@ -33,3 +33,4 @@ deadsnakes-fix-libffi-header-search-path.diff
 deadsnakes-always-use-ncursesw.diff
 deadsnakes-issue6-ncurses-header-detection.diff
 build-libpython.diff
+ext-no-libpython-link.diff
