@@ -1,3 +1,11 @@
+python2.7 (2.7.6-2+lucid1) lucid; urgency=low
+
+  * Include generated _sysconfigdata.py for debug and regular builds.
+    - For each of these, _sysconfigdata.py is from the shared builds.
+  * Don't link extensions against the shared library.
+
+ -- Felix Krull <f_krull@gmx.de>  Tue, 04 Feb 2014 16:03:26 +0100
+
 python2.7 (2.7.6-1+lucid1) lucid; urgency=low
 
   * Imported new upstream version Python 2.7.6.
