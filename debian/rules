@@ -772,7 +772,7 @@ endif
 	rm -rf $(d_exam)/usr/share/doc/python$(VER)/examples/Tools/pynche/X
 
 	: # XXX: Some files in upstream Demo and Tools have strange
-	: # exec permissions, make lintian glad:
+	: # exec permissions, make lintian happy:
 	-chmod 644 $(d_tk)/$(scriptdir)/lib-tk/Tix.py
 	-chmod 644 $(d)/$(scriptdir)/runpy.py
 
@@ -909,6 +909,13 @@ endif
 	done
 	cp -p $(buildd_debug)/pyconfig.h $(d_dbg)/usr/include/$(PVER)_d/
 	ln -sf $(PVER).1.gz $(d_dbg)/usr/share/man/man1/$(PVER)-dbg.1.gz
+
+	: # We want _sysconfigdata.py from the shared regular and debug builds.
+	$(MAKE) -C $(buildd_shared) install DESTDIR=$(CURDIR)/$(d)-shared
+	$(MAKE) -C $(buildd_shdebug) install DESTDIR=$(CURDIR)/$(d)-shdebug
+	cp -p $(d)-shared/$(scriptdir)/_sysconfigdata.py $(d_min)/$(scriptdir)/_sysconfigdata_nd.py
+	cp -p $(d)-shdebug/$(scriptdir)/_sysconfigdata.py $(d_dbg)/$(scriptdir)/_sysconfigdata_d.py
+	cp -p debian/_sysconfigdata.py $(d_min)/$(scriptdir)/_sysconfigdata.py
 
 	touch stamps/stamp-install
 
