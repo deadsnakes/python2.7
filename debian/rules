@@ -538,7 +538,10 @@ endif
 generated-files: control-file
 	: # We have to prepare the various control files
 
-	for f in debian/*.in; do \
+	: # note: File names with spaces are explicitly not supported by this
+	: # target; since we're talking Debian packaging files here, this
+	: # should not be a big problem.
+	for f in `find debian -name \*.in`; do \
 	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
 	  if [ $$f2 != debian/control ]; then \
 	    sed -e "s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g" \
