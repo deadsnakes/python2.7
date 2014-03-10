@@ -574,7 +574,7 @@ clean: generated-files
 	rm -rf locales
 	rm -rf $(d)-dbg
 
-	for f in debian/*.in; do \
+	for f in `find debian -name \*.in`; do \
 	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
 	  if [[ "$(PRESERVE_FILES)" != *"$$f2"* ]]; then \
 	    rm -f $$f2; \
